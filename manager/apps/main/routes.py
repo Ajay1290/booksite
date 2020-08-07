@@ -3,19 +3,19 @@ from sqlalchemy import func
 from flask_login import current_user
 from manager.models.Books import Books, Tags, Authors
 from manager.models.Users import Users
+from datetime import timedelta, datetime
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
-def home(): 
-    books = Books.query.all()
+def home():
+    books = Books.query.order_by(func.random()).limit(10)
     random_tags = Tags.query.order_by(func.random()).limit(10)
     return render_template('apps/main/home.html', books=books, random_tags=random_tags)
 
 
 @main.route('/explore')
 def explore():
-    print(session.items())
     books = sort_books()
     random_tags = Tags.query.order_by(func.random()).limit(10)
     return render_template('apps/main/explore.html', books=books, random_tags=random_tags)
@@ -73,5 +73,5 @@ def sort_books():
             books = Books.query.filter(Books.post_status == 0).order_by(Books.size.desc()).paginate(page=page_e ,per_page=16)
         else:
             books = Books.query.filter(Books.post_status == 0).order_by(Books.pg_views.desc()).paginate(page=page_e ,per_page=16)
-        
+            
         return books

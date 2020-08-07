@@ -11,7 +11,7 @@ class BaseConfig(object):
     SECRET_KEY = 'insecurekeyfordev'
     SEED_ADMIN_EMAIL = 'ajay@gmail.com'
     SEED_ADMIN_PASSWORD = 'apku1290'
-    REMEMBER_COOKIE_DURATION = timedelta(days=90)
+    REMEMBER_COOKIE_DURATION = timedelta(days=1)
 
     LANGUAGES = {
         'en' : 'English',

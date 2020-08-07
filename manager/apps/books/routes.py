@@ -120,10 +120,10 @@ def book_download(book_id):
         if current_user.is_authenticated:
             if session['downloads'] >= 10:
                 flash('You already downloaded 10 Books a day.', 'success')
-                return redirect(url_for('main.home'))
+                return redirect(url_for('pages.download_limit'))
         else:
             flash('You already downloaded 5 Books a day.', 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('pages.download_limit'))
     session['downloads'] += 1
     book = Books.query.get_or_404(book_id)
     if current_user.is_anonymous == False:

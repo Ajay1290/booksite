@@ -4,6 +4,10 @@ from manager.models.Users import Users
 
 pages = Blueprint('pages', __name__)
 
+@pages.route('/you-reached-download-limit')
+def download_limit():
+    return render_template('apps/pages/download_limit.html')
+
 @pages.route('/privacy')
 def privacy():
     return render_template('apps/pages/privacy.html')
