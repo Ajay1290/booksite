@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <link rel="icon" href="{{ url_for('static',filename='src/IMAGES/favicon.ico') }}" type="image/ico" sizes="32x32">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookElf - Admin</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='dist/CSS/power.min.css')}}">
+    {% block head %}
+	{% endblock head %}
+
+</head>
+<body>
+
+    <main class="container-fluid" style="position: relative; top: 0px;">
+        {% include "apps/admins/components/notification.html" %}
+        <!-- Main Section -->
+        <div class="row">
+            <aside class="col-2 bg-dark h-100 position-fixed p-0" style="z-index: 100;">
+                {% include "apps/admins/components/sidebar.html" %}
+            </aside>
+
+            <section class="col-10 offset-2 p-2" style="min-height: 100vh;">
+                {% block content %}
+                {% endblock content %}
+            </section>
+
+        </div>
+
+    </main>
+    
+    {% block modal %}
+	{% endblock modal %}
+
+
+	<script type="text/javascript" src="{{ url_for('static', filename='dist/JS/power.min.js') }}"></script>
+	{% block JS %}
+	{% endblock JS %}
+</body>
+</html>

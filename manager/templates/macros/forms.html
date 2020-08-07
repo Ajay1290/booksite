@@ -1,0 +1,12 @@
+{% macro field(f, cssClass='form-control') -%}
+    {% if f.errors %}
+        {{ f(class=cssClass+"is-invalid") }}
+        <div class="invalid-feedback text-left">
+            {% for error in f.errors %}
+                <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ f(class=cssClass) }} 
+    {% endif %}
+{%- endmacro %}

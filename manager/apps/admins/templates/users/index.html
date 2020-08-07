@@ -1,0 +1,47 @@
+{% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="m-3 border-bottom">
+        <h1 class="f-28 d-inline-block">Users</h1>
+        <a href="{{ url_for('admins.users_create') }}" class="sw-btn f-12 float-right">+ New User</a>
+    </div>
+    <div class="sw-table-area p-2">
+        <div class="sw-table-features">
+            <div class="sw-table-filter"></div>
+            <div class="sw-table-search"></div>
+            <div class="sw-table-dots"></div>
+        </div>
+        <table class="sw-table w-100 sw-table-rower sw-table-pager sw-table-infom">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Views</th>
+                    <th>sign_in_count</th>
+                    <th>books</th>
+                    <th>comments</th>
+                    <th>downloads</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users.items %}
+                <tr>
+                    <td class="{% if user.active %}bg-info text-white{% endif %}">{{user.id}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>                    
+                    <td class="sw-table-numeric">{{user.pg_views}}</td>
+                    <td class="sw-table-numeric">{{user.sign_in_count}}</td>
+                    <td class="sw-table-numeric">{{user.books.__len__()}}</td>
+                    <td class="sw-table-numeric">{{user.comments.count()}}</td>
+                    <td class="sw-table-numeric">{{user.downloads.__len__()}}</td>
+                    <td class="text-right">
+                        <a class="b-4 text-info" href="{{url_for('admins.users_info', user_id=user.id) }}">View</a> | <a class="b-4 text-secondary" href="{{url_for('admins.users_edit', user_id=user.id) }}">Edit</a> | <a class="b-4 text-danger" href="{{url_for('admins.users_delete', user_id=user.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

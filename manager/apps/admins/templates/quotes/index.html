@@ -1,0 +1,37 @@
+{% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="m-3 border-bottom">
+        <h1 class="f-28 d-inline-block">Users</h1>
+        <a href="{{ url_for('admins.quote_create') }}" class="sw-btn f-12 float-right">+ New Quote</a>
+    </div>
+    <div class="sw-table-area p-2">
+        <div class="sw-table-features">
+            <div class="sw-table-filter"></div>
+            <div class="sw-table-search"></div>
+            <div class="sw-table-dots"></div>
+        </div>
+        <table class="sw-table w-100 sw-table-rower sw-table-pager sw-table-infom">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>quote</th>
+                    <th>quote_by</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in quotes.items %}
+                <tr>
+                    <td class="{% if q.active %}bg-info text-white{% endif %}">{{q.id}}</td>
+                    <td>{{ q.quote }}</td>
+                    <td>{{ q.quote_by }}</td>                    
+                    <td class="text-right" style="width: 150px;">
+                        <a class="b-4 text-secondary" href="{{url_for('admins.quote_edit', user_id=q.id) }}">Edit</a> | <a class="b-4 text-danger" href="{{url_for('admins.quote_delete', user_id=q.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

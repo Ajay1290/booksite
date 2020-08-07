@@ -1,0 +1,784 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <meta title="{{ book.title }} | BookElf.in">
+    {% if book.content.__len__() > 30 %}
+        <meta name="description" content="{{ book.content | truncate(200) | safe }}">
+    {% else %}
+        <meta name="description" content="{{ book.title }} was uploaded by {{ book.user.username }} on Bookelf">
+    {% endif %}
+    <!-- Facebook -->
+    <meta property="og:site_name" content="Bookelf.in">
+    <meta property="og:title" content="Bookelf - {{ book.title }}" />
+    {% if book.content.__len__() > 30 %}
+        <meta property="og:description"  content="{{ book.content | truncate(200) | safe }}">
+    {% else %}
+        <meta property="og:description" content="{{ book.title }} was uploaded by {{ book.user.username }} on Bookelf">
+    {% endif %}
+    <meta property="og:image" itemprop="image" content="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}">
+    <meta property="og:type" content="website" />
+{% endblock meta %}
+
+{% block head %}
+    <style>
+        .form-control:focus{            
+            color: #495057;
+            background-color: #fff;
+            border-color: #343a40!important;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem #52343a40 !important;
+        }
+    </style>
+{% endblock head %}
+
+{% block all %}
+<div class="container-fluid">
+    <div class="row my-3">
+        <!-- Bigger Col -->
+        <div class="col-lg-9 col-md-12 pr-0">
+            <!-- First row in First Column -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="sw-content-section p-3" style="height: 100%;">
+                        <div class="row">
+                            <!-- IMG col -->
+                            <div class="col-lg-3 col-12" style="text-align: center;">
+                                <div class="img_wrap ml-auto" style="display: inline-block;">
+                                    <div class="img_wrap_in ">
+                                    <img class="img-thumbnail" src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 col-12">
+                                <h1 class="f-20 article-title">{{ book.title }}</h1>
+                                <!-- Title Divider -->
+                                <hr class="mt-0 mb-2">
+                                <!-- Meta data row -->
+                                <div class="row f-14 my-1">
+                                    <!-- 1st col -->
+                                    <div class="col-lg-6 col-md-6 col-12 f-12 sharp-txt">
+                                        <!-- Uploader -->
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Uploader</label> </div>
+                                            <div class="col-lg-5 col-7">
+                                                <a class="mr-2" href="{{ url_for('users.account', username=book.user.username) }}">
+                                                    {{ book.user.username }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- Writers -->
+                                        {% if book.authors %}
+                                            <div class="row">
+                                                <div class="col-lg-3 col-5 "> <label>Authors</label> </div>
+                                                <div class="col-lg-9 col-7 ">
+                                                {% for author in book.authors %}
+                                                    <a href="{{ url_for('authors.author', author_id=author.id) }}">{{ author.name }}</a>{% if loop.nextitem %},{% endif %}<br>
+                                                {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <!-- Categories -->
+                                        {% if book.categories[0] %}
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Categories</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.categories[0].name }}</span> </div>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Isbn10 -->
+                                        {% if book.isbn10 %}
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Isbn10</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.isbn10 }}</span> </div>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Isbn13 -->
+                                        {% if book.isbn13 %}
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Isbn13</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.isbn13 }}</span> </div>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Downloads -->
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Downloads</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.downloads }}</span> </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- 2nd Meta data col -->
+                                    <div class="col-lg-6 col-md-6 col-12 f-12 sharp-txt"> 
+                                        <!-- DATE -->
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Date</label> </div>
+                                            <div class="col-lg-5 col-7">
+                                                <span class="text-muted">{{ book.created_on.strftime('%d-%m-%Y') }}</span>
+                                            </div>
+                                        </div>
+                                        <!-- Publisher -->
+                                        {% if book.publishers[0] %}
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Publisher</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.publishers[0].name }}</span> </div>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Edition -->
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Pages</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.pages }}</span> </div>
+                                        </div>
+                                        <!-- FileSize -->
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5 "> <label>FileSize</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>PDF, {{ book.size }} MB</span> </div>
+                                        </div>
+                                        <!-- Language -->
+                                        {% if book.language %}
+                                        <div class="row">
+                                            <div class="col-lg-3 col-5"> <label>Language</label> </div>
+                                            <div class="col-lg-5 col-7"> <span>{{ book.language }}</span> </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- Categories are here -->
+                                <div class="row f-14 ">
+                                    <div class="col-lg-1 col-md-2  mr-4">
+                                        <label>Categories</label>
+                                    </div>
+                                    <div class="col-lg-10 col-md-9 col-12">
+                                        {% for t in book.tags %}
+                                            <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="w-100">
+                                    <a class="btn btn-outline-info btn-sm mr-auto" id="download_btn" href="{{ url_for('books.book_download',book_id=book.id ) }}" target="blank" >
+                                        Download
+                                    </a>
+                                    
+                                    <button type="button" class="btn btn-outline-info  btn-sm m-1" data-toggle="modal" data-target="#PDFModal">Look Inside</button>
+
+                                    {% if book.user == current_user %}
+                                        <a class="btn btn-outline-secondary btn-sm mt-1 mb-1" href="{{ url_for('books.book_update', book_id=book.id) }}">Update</a>
+                                        
+                                        <button type="button" class="btn btn-outline-danger btn-sm m-1" data-toggle="modal" data-target="#DeleteModal">Delete</button>
+
+                                    {% endif %}
+                                </div>
+                                <!-- Post Diveder -->
+                                <hr class="mt-2 mb-2">
+
+                                <!-- Post Content -->
+                                <div class="row mx-auto w-100 ">
+                                    <div class="mx-auto w-100 ">
+                                        <span><big>{{ book.pg_views }}</big> views </span>
+                                        <div class="float-right">
+                                            <span class="btn btn-secondary f-12 mx-2 btn-sm" style="cursor: pointer;" data-toggle="modal" data-target="#ShareModal">
+                                                <svg style="height: 12px; width: 12px;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="share" class="svg-inline--fa fa-share fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M503.691 189.836L327.687 37.851C312.281 24.546 288 35.347 288 56.015v80.053C127.371 137.907 0 170.1 0 322.326c0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631C66.066 312.814 132.917 274.316 288 272.085V360c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z"></path></svg> Share
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 my-2" style="padding: 0;">
+                                        <p class="article-content f-14 my-auto">{{ book.description }}</p>
+                                    </div>
+                                    <span class="f-14 ml-auto mx-4 my-2" style="cursor: pointer;">
+                                        <a data-toggle="modal" data-target="#ReportModal">
+                                            <svg style="height: 14px; width: 14px; line-height: 0em;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="flag" class="svg-inline--fa fa-flag fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M336.174 80c-49.132 0-93.305-32-161.913-32-31.301 0-58.303 6.482-80.721 15.168a48.04 48.04 0 0 0 2.142-20.727C93.067 19.575 74.167 1.594 51.201.104 23.242-1.71 0 20.431 0 48c0 17.764 9.657 33.262 24 41.562V496c0 8.837 7.163 16 16 16h16c8.837 0 16-7.163 16-16v-83.443C109.869 395.28 143.259 384 199.826 384c49.132 0 93.305 32 161.913 32 58.479 0 101.972-22.617 128.548-39.981C503.846 367.161 512 352.051 512 335.855V95.937c0-34.459-35.264-57.768-66.904-44.117C409.193 67.309 371.641 80 336.174 80zM464 336c-21.783 15.412-60.824 32-102.261 32-59.945 0-102.002-32-161.913-32-43.361 0-96.379 9.403-127.826 24V128c21.784-15.412 60.824-32 102.261-32 59.945 0 102.002 32 161.913 32 43.271 0 96.32-17.366 127.826-32v240z"></path></svg> <span>Report Problem</span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Second Row in First Column -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="sw-content-section p-3" style="height: 100%;">
+                        <!-- Tab Menu -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="All-tab" data-toggle="tab" href="#All" role="tab" aria-controls="All" aria-selected="true">All</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="Related-tab" data-toggle="tab" href="#Related" role="tab" aria-controls="Related" aria-selected="false">Related</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="Author-tab" data-toggle="tab" href="#Author" role="tab" aria-controls="Author" aria-selected="false">From {{ book.user.username }}</a>
+                            </li>
+                        </ul>
+                        
+                        <!-- Start of Tabs -->
+                        <div class="tab-content" id="tabContent">
+                            <!-- All Tab -->
+                            <div class="tab-pane fade show active" id="All" role="tabpanel" aria-labelledby="All-tab">                                
+                                {% for book_a in books_all %}
+                                    <article class="media border p-2 my-3 rounded mx-1">
+                                        <div class="im_co_wrap mr-md-3">                                        
+                                            <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}"
+                                            data-src="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}"
+                                            data-srcset="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}">
+                                        </div>
+                                
+                                        <div class="media-body">
+                                            <div class="article-metadata">
+                                                <a class="mr-2" href="{{ url_for('users.account', username=book_a.user.username) }}">{{ book_a.user.username }}</a>
+                                                <small class="text-muted">
+                                                    {{ book_a.created_on.strftime('%d-%m-%Y') }}
+                                                </small>
+                                                <span class="ml-2">
+                                                    {% for t in book_a.tags[0:9] %}                                                        
+                                                        <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                                    {% endfor %}
+                                                </span>
+                                            </div>
+                                            <hr class="my-1 mx-1">
+                                            <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_a.id) }}">
+                                                {{ book_a.title }}
+                                            </a>
+                                            <div class="f-14">
+                                                Downloads: {{ book_a.downloads }} | File: PDF,{{ book_a.size }} MB | Pages: {{ book_a.pages }} {% if book_a.authors %} | Authors: {% for auth in book_a.authors %}
+                                                <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
+                                                    {{auth.name}}{% if loop.nextitem %},{% endif %}
+                                                </a>{% endfor %}{% endif %}
+                                            </div>                                        
+                                            <p class="article-content mt-1 f-14">
+                                                {{ book_a.description| truncate(250) | safe }}
+                                            </p>
+                                        </div>
+                                    </article>
+                                {% endfor%}
+                            </div>  
+
+                            <!-- Related Tab -->
+                            <div class="tab-pane fade" id="Related" role="tabpanel" aria-labelledby="Related-tab" >                                
+                                {% if rec_books.__len__() > 0 %}
+                                    {% for book_r in rec_books %}
+                                        {% if book_r != book %}
+                                            <article class="media border p-2 my-3 rounded mx-1">
+                                                <div class="im_co_wrap mr-md-3">                                        
+                                                    <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}"
+                                                    data-src="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}"
+                                                    data-srcset="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}">
+                                                </div>
+                                        
+                                                <div class="media-body">
+                                                    <div class="article-metadata">
+                                                        <a class="mr-2" href="{{ url_for('users.account', username=book_r.user.username) }}">{{ book_r.user.username }}</a>
+                                                        <small class="text-muted">
+                                                            {{ book_r.created_on.strftime('%d-%m-%Y') }}
+                                                        </small>
+                                                        <span class="ml-2">
+                                                            {% for t in book_r.tags[0:9]  %}
+                                                                <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                                            {% endfor %}
+                                                        </span>
+                                                    </div>
+                                                    <hr class="my-1 mx-1">
+                                                    <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_r.id) }}">
+                                                        {{ book_r.title }}
+                                                    </a>
+                                                    <div class="f-14">
+                                                        Downloads: {{ book_r.downloads }} | File: PDF,{{ book_r.size }} MB | Pages: {{ book_r.pages }} {% if book_r.authors %} | Authors: {% for auth in book_r.authors %}
+                                                        <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
+                                                            {{auth.name}}{% if loop.nextitem %},{% endif %}
+                                                        </a>{% endfor %}{% endif %}
+                                                    </div>                                        
+                                                    <p class="article-content mt-1 f-14">
+                                                        {{ book_r.description| truncate(250) | safe }}
+                                                    </p>
+                                                </div>
+                                            </article>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <h2 class="m-3 f-22 text-center">No Books Found Related to this.</h2>
+                                {% endif %}
+                            </div>
+
+                            <!-- Author Tab -->
+                            <div class="tab-pane fade" id="Author" role="tabpanel" aria-labelledby="Author-tab">
+                                {% if uploader_books.count() > 1 %}
+                                    {% for book_u in uploader_books %}
+                                        {% if book_u != book %}
+                                            <article class="media border p-2 my-3 rounded mx-1">
+                                                <div class="im_co_wrap mr-md-3">                                        
+                                                    <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}"
+                                                    data-src="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}"
+                                                    data-srcset="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}">
+                                                </div>
+                                        
+                                                <div class="media-body">
+                                                    <div class="article-metadata">
+                                                        <a class="mr-2" href="{{ url_for('users.account', username=book_u.user.username) }}">{{ book_u.user.username }}</a>
+                                                        <small class="text-muted">
+                                                            {{ book_u.created_on.strftime('%d-%m-%Y') }}
+                                                        </small>
+                                                        <span class="ml-2">
+                                                            {% for t in book_u.tags[0:9]  %}
+                                                                <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                                            {% endfor %}
+                                                        </span>
+                                                    </div>
+                                                    <hr class="my-1 mx-1">
+                                                    <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_u.id) }}">
+                                                        {{ book_u.title }}
+                                                    </a>
+                                                    <div class="f-14">
+                                                        Downloads: {{ book_u.downloads }} | File: PDF,{{ book_u.size }} MB | Pages: {{ book_u.pages }} {% if book_u.authors %} | Authors: {% for auth in book_u.authors %}
+                                                        <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
+                                                            {{auth.name}}{% if loop.nextitem %},{% endif %}
+                                                        </a>{% endfor %}{% endif %}
+                                                    </div>                                        
+                                                    <p class="article-content mt-1 f-14">
+                                                        {{ book_u.description| truncate(250) | safe }}
+                                                    </p>
+                                                </div>
+                                            </article>
+                                        {% endif %}
+                                    {% endfor%}
+                                {% else %}
+                                    <h2 class="m-3 f-22 text-center">No More Books Uploaded by {{ book.user.username }}</h2>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                        <!-- End tabs -->
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Inspired by your browsing history -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="sw-content-section p-3" style="height: 100%;">
+                        <h4 class="formal_head sharp-txt f-24">Random Books</h4>
+                        <hr class="my-1 border">
+                        <div class="owl-carousel owl-theme ">
+                            {% for book_r1 in random_books %}
+                                <div class="item " id="car_col">
+                                    <div id="thumb_wrap" >
+                                        <a  title="{{ book.title }}" href="{{ url_for('books.book', book_id=book_r1.id) }}">
+                                            <img alt="{{book.title}}" style="height: 300px;width: 200px;" class=" img-thumbnail lazy_o" id="thumb"   src="{{ url_for('static', filename='book_covers/default.jpg') }}"  data-src="{{ url_for('static', filename='book_covers/' + book_r1.image[0].path) }}" data-srcset="{{ url_for('static', filename='book_covers/' + book_r1.image[0].path) }}"> 
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">  
+                </div>
+            </div>
+
+            <!-- Inspired by your browsing history -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="sw-content-section p-3" style="height: 100%;">
+                        <h4 class="formal_head sharp-txt f-24">Random Books</h4>
+                        <hr class="my-1 border">
+                        <div class="owl-carousel owl-theme ">
+                            {% for book_r2 in random_books %}
+                                <div class="item " id="car_col">
+                                    <div id="thumb_wrap" >
+                                        <a  title="{{ book_r2.title }}" href="{{ url_for('books.book', book_id=book_r2.id) }}">
+                                            <img alt="{{book_r2.title}}" style="height: 300px;width: 200px;" class=" img-thumbnail lazy_o" id="thumb"   src="{{ url_for('static', filename='book_covers/default.jpg') }}"  data-src="{{ url_for('static', filename='book_covers/' + book_r2.image[0].path) }}" data-srcset="{{ url_for('static', filename='book_covers/' + book_r2.image[0].path) }}"> 
+                                        </a>                                        
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comment -->
+            <div id="comment_arra" class="my-3">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="sw-content-section p-3">
+                            {% if current_user.is_authenticated %}
+                            <form method="POST" action="">
+                                {{ comment_form.hidden_tag() }}
+                                    <legend>{{ comment_form.comment.label(class="form-control-label f-20 sharp-txt") }}</legend>                
+                                    <div class="form-control-group">
+                                        {% if comment_form.comment.errors %}
+                                            {{ comment_form.comment(class="form-control form-control-sm is-invalid") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in comment_form.comment.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ comment_form.comment(class="form-control form-control-sm",style="min-height:100px;") }}
+                                        {% endif %}
+                                    </div>            
+                                <div class="text-right my-2 pt-1">
+                                    <button type="submit" class='btn f-16 px-3 btn-sm btn-secondary ' >
+                                        Submit
+                                    </button>                                    
+                                </div>
+                            </form>
+                            {% else %}
+                            <div class="text-center">
+                                <h3>You must logged in to comment.</h3>
+                                <div>
+                                <a href="{{ url_for('users.login') }}">
+                                    <button class="btn btn-primary">Login</button>
+                                </a>
+                                <a href="{{ url_for('users.register') }}">
+                                    <button class="btn btn-danger">Create a account</button>
+                                </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% for comment in book.comments %}
+                            <div class="sw-content-section my-2 p-2">
+                                <div class="f-16 px-2">
+                                    {{ Users.query.get(comment.user_id).username }}
+                                    <span class="float-right pt-1 f-12 b-3">
+                                        {{ comment.created_on.strftime('%d-%m-%Y | %I:%M %p') }}
+                                    </span>
+                                </div><hr class=" border-bottom mt-1 mb-0 mx-1">
+                                <p class="f-14 px-3 py-1">{{ comment.content }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- End of Biger Col -->
+
+        <!-- Smaller Col -->
+        <div class="col-lg-3 col-12">
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="sw-content-section p-3 m-0 h-100">
+                        {% if current_user.is_authenticated %}
+                            <h4 class="mb-0 d-inline-block f-20 sharp-txt">Authors You May Like </h4>
+                            <p class="text-muted mt-1 mb-2 mx-1 f-12">
+                                Browse new books by new authors to explore the beautiful creation of author.
+                            </p>
+                            {% for author in random_authors %}
+                                {% if not author.image_file %}
+                                    <img class="my-1 mr-1" src="{{ url_for('static', filename='author_files/default.jpg') }}" style="height: 60px;width: 60px;border-radius: 50%;">
+                                {% else %}
+                                    <img class="my-1 mr-1" src="{{ url_for('static', filename='author_files/' + author.image_file[0].path) }}" style="height: 60px;width: 60px;border-radius: 50%;">
+                                {% endif %}
+                                <a class="mr-2" href="{{ url_for('authors.author', author_id=author.id,a=author.name) }}"><span>{{author.name}}</span></span></a>
+                                <br>
+                            {% endfor %}
+                        {% else %}
+                            <div class="sw-form">
+                                <form method="POST" action="">
+                                    {{ form.hidden_tag() }}
+                                        <h4 class="mb-1 d-inline-block f-20 sharp-txt">Create a Account</h4>
+                                        <div class="my-1">
+                                            <div class="w-100 text-left">
+                                                <label class="d-inline-block f-12 mb-0" for="username">Username </label>
+                                            </div>
+                                            {% if form.username.errors %}
+                                                {{ form.username(class="f-14 form-control py-0  is-invalid") }}
+                                                <div class="invalid-feedback text-left">
+                                                    {% for error in form.username.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.username(class="f-14 form-control py-0") }} 
+                                            {% endif %}
+                                        </div>
+                                        <div class="my-1">
+                                            <div class="w-100 text-left">
+                                                <label class="d-inline-block f-12 mb-0" for="email">Email </label>
+                                            </div>
+                                            {% if form.email.errors %}
+                                                {{ form.email(class="f-14 form-control py-0  is-invalid") }}
+                                                <div class="invalid-feedback text-left">
+                                                    {% for error in form.email.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.email(class="f-14 form-control py-0") }} 
+                                            {% endif %}
+                                        </div>
+                                        <div class="my-1">
+                                            <div class="w-100 text-left">
+                                                <label class="d-inline-block f-12 mb-0" for="password">Password </label>
+                                            </div>
+                                            {% if form.password.errors %}
+                                                {{ form.password(class="f-14 form-control py-0  is-invalid") }}
+                                                <div class="invalid-feedback text-left">
+                                                    {% for error in form.password.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.password(class="f-14 form-control py-0") }} 
+                                            {% endif %}
+                                        </div>
+                                        <div class="my-1">
+                                            <div class="w-100 text-left">
+                                                <label class="d-inline-block f-12 mb-0" for="confirm_password">Confirm Password</label>
+                                            </div>
+                                            {% if form.confirm_password.errors %}
+                                                {{ form.confirm_password(class="f-14 form-control py-0  is-invalid") }}
+                                                <div class="invalid-feedback text-left">
+                                                    {% for error in form.confirm_password.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.confirm_password(class="f-14 form-control py-0") }} 
+                                            {% endif %}
+                                        </div>
+                                        <div class="my-1">
+                                            <button type="submit" class="f-14 my-2 sw-btn d-inline-block w-100">
+                                                <span class="sw-btn-ripple"></span>
+                                                Sign Up
+                                            </button>                                              
+                                        </div>
+                                </form>
+                                <div class="f-12">
+                                    By continuing, you agree to BookElf's <a href="#">Conditions of Use</a> and <a href="#">Privacy Notice</a>. 
+                                </div>
+                            </div>
+                            <span class="f-12">
+                                Already Have An Account?                                 
+                                <a class="ml-2" href="{{ url_for('users.login') }}">
+                                    Sign In
+                                </a>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Tags Sidebar -->
+            <div class="row">
+                <div class="col-12">
+                <div class="sw-content-section p-3 h-100 ">
+                    <h4 class="mb-0 d-inline-block f-20 sharp-txt">Tags You May Like</h4>
+                    <p class='text-muted mt-1 mb-2 mx-1 f-12'>Explore Books by tags to browse more realted books.</p>
+                    <ul class="list-group">                        
+                        {% for tag in random_tags %}                        
+                            <a href="{{ url_for('tags.tag', tag_id=tag.id) }}">
+                                <li class="list-group-item b-3 list-group-item-light btn btn-{{tag.color}} category_side" >{{ tag.name }}</li>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                </div>
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Dummy Comment -->
+            <div class="dumm_comment">
+                
+            </div>
+
+
+        </div>
+  
+    </div>
+</div>
+{% endblock all %}
+
+{% block JS %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop:false,
+            margin:10,
+            nav:true,
+            lazyLoad:true,
+            rewind:false,
+            dots:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                440:{
+                    items:2
+                },
+                570:{
+                    items:3
+                },
+                720:{
+                    items:4
+                },
+                1200:{
+                    items:5
+                }
+            }
+        });
+    </script>
+{% endblock JS %}
+
+{% block modal %}
+
+  <!-- Look insde Modal -->
+  <div class="modal fade" id="PDFModal" tabindex="-1" role="dialog" aria-labelledby="PDFModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <embed src='#' data-src="{{ url_for('static', filename='books/' + book.file[0].path ) }}" type="application/pdf" data-srcset="{{ url_for('static', filename='books/' + book.file[0].path ) }}" type="application/pdf" height="540px" width="100%">
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Share Modal -->
+  <div class="modal fade " id="ShareModal" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Share book</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" style="width: 100%; height: 100%;">
+          <button class="btn btn-primary btn-sm float-right mb-1" id="copy_btn" data-toggle="tooltip" data-placement="top" onclick="myFunction()" title="Copy Url">copy</button>
+          <input type="url" name="url" id="url_link" style="width: 100%;padding: 8px;border-radius: 4px;">
+          <script>
+            var url_link = document.getElementById('url_link');
+            var url = window.location.href;
+            url_link.value = url
+
+            function myFunction() {
+              var copyText = document.getElementById("url_link");
+              copyText.select();
+              copyText.setSelectionRange(0, 99999);
+              document.execCommand("copy");
+              document.getElementById('copy_btn').title = "Copied!"
+            }
+          </script>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Modal -->
+  <div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {% if current_user.is_authenticated %}
+            <div class="modal-content">
+                <form method="POST" action="" style="list-style: none;">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ report_form.report_options.label }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body" style="width: 100%; height: 100%;">            
+                    <div class="form-group">
+                        {{ report_form.hidden_tag() }}
+                        <div class="form-group">                      
+                            {{ report_form.report_options(style="list-style:none;padding:0 1em;")}}
+                        </div>
+                        <!-- Content -->
+                        <div class="form-group">
+                            {% if report_form.content.errors %}
+                                {{ report_form.content(class="form-control form-control-sm is-invalid", placeholder="Tell little bit about your problem...." ) }}
+                                <div class="invalid-feedback">
+                                    {% for error in report_form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ report_form.content(class="form-control form-control-sm" , placeholder="Tell little bit about your problem....") }}
+                            {% endif %}
+                        </div>
+                    </div>                
+                </div>
+
+                <div class="modal-footer">
+                    <div> <button type="submit" class="btn btn-danger">Submit</button></div>
+                </div>
+            </form>
+            </div>
+        {% else %}
+            <div class="modal-content">
+                <div class="modal-body" style="width: 100%; height: 100%;">
+                    <h2 class="f-20">
+                    You have to login or signup so that after working on you problem we can atleast contact you.
+                    </h2>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-sm btn-info" href="{{ url_for('users.login') }}">Login</a>
+                    <a class="btn btn-sm btn-info" href="{{ url_for('users.register') }}">Sign Up</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+  </div>
+
+    <!-- Modal -->
+  <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Do you really want to delete ....?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <div class="modal-body" style="width: 100vw; height: 100%;">
+          <div>
+            <a href="{{ url_for('books.book_delete',book_id=book.id) }}">
+              <button class="btn btn-danger">Delete</button>
+            </a>
+            <button class="btn btn-secondary"  type="button" class="close" data-dismiss="modal" aria-label="Close">Cancle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock modal %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <meta title="Upload Your Books on BookElf | BookElf.in ">
+    <meta name="description" content="Upload your books on BookElf. Share them or store them for better use. Join BookElf and share your books with people to empower our future genration with Knowledge.">
+{% endblock meta %}
+{% block head %}
+    <script src="{{ url_for('static', filename='src/JS/vendor/pdfjs/pdf.js') }}"></script>
+{% endblock head %}
+
+{% block all %}
+    <div class="container mt-4" id="uppost">
+        <legend class="sw-content-section p-2 mb-md-4 mb-2">Update Book</legend>
+
+        <form method='POST' class="sw-panel sw-panel-design p-3" action="/books/{{ book.id }}/update" enctype="multipart/form-data" >
+            {{ form.hidden_tag() }}
+
+            <div class="row">
+                
+                <div class="col-3">
+                    <div class="mt-1 mb-3 ml-3" style="display: inline-block;" id="canvas_box" title="Click to update cover of a book.">
+                        <img class="img-thumbnail img_cov " id='the-canvas' src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}">
+                        <canvas class="my-3 mx-2" id="the-canvas1" style="display: none;" ></canvas>
+                    </div>
+
+                    {{ form.image(hidden=true,accept="Image/*") }}
+                    <input type="file" id="book_img_fs" name="book_img_fs" hidden>
+    
+                    <div class="btn btn-success ml-md-2 mb-3 w-100">
+                        <span id="upload_files">Upload a Book</span>
+                        {{ form.file(hidden=true,accept="application/pdf") }}
+                    </div>
+                </div>
+
+                <div class="col-9">
+                    <div id="progress_bar"><div class="percent">0%</div></div>
+                    <!-- Submit buttons -->
+                    <div class="text-right">
+                        <button class="sw-btn f-14 px-3" type="submit">Upload</button>
+                        <a href="{{ url_for('books.book_update', book_id=book.id) }}">
+                            <div class="sw-btn sw-btn-outline f-14 px-3 cancle_btn ">Cancle</div>
+                        </a>
+                    </div>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Basic Info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="Advance-tab" data-toggle="tab" href="#Advance" role="tab" aria-controls="Advance" aria-selected="false">Advance</a>
+                        </li>                            
+                    </ul>
+                    
+                    <div class="tab-content" id="myTabContent">
+
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <fieldset class="form-group mx-md-3 my-3">
+                                <!-- Title -->
+                                <div class="form-group">
+                                    {% if form.title.errors %}
+                                        {{ form.title(class="form-control form-control-lg f-16 py-1 px-2 is-invalid" , placeholder="Book title") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.title.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.title(class="form-control form-control-lg f-16 py-1 px-2", placeholder="Book title") }} 
+                                    {% endif %}
+                                </div>
+        
+                                <!-- Tags -->
+                                <div class="form-group">
+                                    {% if form.tags.errors %}
+                                        {{ form.tags(class="form-control form-control-lg f-16 py-1 px-2 is-invalid", placeholder="Categories related to book") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.tags.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.tags(class="form-control form-control-lg f-16 py-1 px-2", placeholder="Categories related to book") }}
+                                        <small class="help-block">{{ form.tags.description|safe }}</small>
+                                    {% endif %}
+                                </div>
+            
+                                <!-- Content -->
+                                <div class="form-group">
+                                    {% if form.description.errors %}
+                                        {{ form.description(class="form-control form-control-lg f-16 py-1 px-2 is-invalid",style="min-height:100px", placeholder="Tell little bit about book...." ) }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.description.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.description(class="form-control form-control-lg f-16 py-1 px-2", style="min-height:100px" , placeholder="Tell little bit about book....") }}
+                                    {% endif %}                          
+                                </div>
+                            </fieldset>
+                        </div>
+        
+                        <!-- Advance Tab -->
+                        <div class="tab-pane fade" id="Advance" role="tabpanel" aria-labelledby="Advance-tab">
+                            <div style="display: flex;justify-content: center;align-items: center;height: 300px;">
+                                <div>
+                                    <h4 onclick="$('#thu_link').click();" class="sw-btn p-3 f-16" style="cursor: pointer;">Upload your own book thumbnail</h4>
+                                    <input class="btn btn-primary" id="thu_link" type="file" id="book_img_fs" name="book_img_fs" accept="image/*"  style="display: none;">
+                                </div>
+                            </div>
+                            <img src="" id="MyPix">
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+            
+        </form>
+
+        <div class="sw-content-section p-3 my-4">
+            <h4>Help and Suggestions</h4>
+            <hr class="mt-0 mb-0 mb-sm-3">
+            <p class="mt-1 f-14">
+                By submitting your book to BookElf, you acknowledge that you agree to BookElf's <a href="#">Terms of Service</a> and <a href="#">Community Guidelines</a>.
+                Please be sure not to violate others' copyright or privacy rights.
+                <a href="#">Learn more</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        // let canvas_box = document.getElementById('canvas_box');
+        // let image_input = document.getElementById('image');
+        let file_input = document.getElementById('file');
+        let upload_files = document.getElementById('upload_files');
+        // canvas_box.onclick = function(){
+        //     image_input.click();
+        // }        
+        upload_files.onclick = function(){
+            file_input.click();
+        }        
+    </script>
+{% endblock all %}

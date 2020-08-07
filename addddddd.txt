@@ -1,0 +1,22 @@
+More Data from Visitors
+    #personal info
+        local
+        forgot password
+
+    #books related by user
+        books visited
+        books searched, keywords
+        tags followed
+        authors followed
+
+    #restrictions
+        one book complain to check if not 3 complain to check
+        if complain | not to used by any user
+        
+        User can download 5 books per day only
+        if sign up 10 books per day only
+    
+    categoriez pages
+    popular by categoriez
+    top 10s by categoriez
+    authors by categoriez

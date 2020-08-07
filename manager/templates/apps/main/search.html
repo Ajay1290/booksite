@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block all %}
+    <div class="row mt-3">
+        <div class="col-9">
+            <span class="f-14 mx-2">
+                Results for search - <u class="b-3">{{ request.args.get('q') }}</u>
+                <span class="text-muted ml-2 f-12">
+                  (About {{ books.total }} books on {{ books.page }} of {{ books.pages }} Pages)
+                </span> 
+              </span>
+            {% for book in books.items %}
+                <article class="sw-content-section media border p-2 my-3 rounded mx-1">
+                    <div class="im_co_wrap mr-md-3">                                        
+                        <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}"
+                        data-src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}"
+                        data-srcset="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}">
+                    </div>
+
+                    <div class="media-body">
+                        <div class="article-metadata">
+                            <a class="mr-2" href="{{ url_for('users.account', username=book.user.username) }}">{{ book.user.username }}</a>
+                            <small class="text-muted">
+                                {{ book.created_on.strftime('%d-%m-%Y') }}
+                            </small>
+                            <span class="ml-2">
+                                {% for t in book.tags[0:9]  %}
+                                    <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <hr class="my-1 mx-1">
+                        <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book.id) }}">
+                            {{ book.title }}
+                        </a>
+                        <div class="f-14">
+                            Downloads: {{ book.downloads }} | File: PDF,{{ book.size }} MB | Pages: {{ book.pages }} {% if book.authors %} | Authors: {% for auth in book.authors %}
+                            <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
+                                {{auth.name}}{% if loop.nextitem %},{% endif %}
+                            </a>{% endfor %}{% endif %}
+                        </div>                                        
+                        <p class="article-content mt-1 f-14">
+                            {{ book.description| truncate(250) | safe }}
+                        </p>
+                    </div>
+                </article>        
+            {% endfor %}
+
+            {% for page_num in books.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if books.page == page_num %}
+                        <a class="btn btn-info mb-4" href="{{ url_for('main.search',q= request.args.get('q'), s=request.args.get('s'), page=page_num ) }}">{{ page_num }}</a>
+                    {% else %}
+                        <a class="btn btn-outline-info mb-4" href="{{ url_for('main.search',q= request.args.get('q'),s=request.args.get('s'), page=page_num ) }}">{{ page_num }}</a>
+                    {% endif %} 
+                {% else %}
+                ....
+                {% endif %}
+            {% endfor %} 
+        </div>
+
+        <div class="col-3">
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+            <!-- Ads -->
+            <div class="row my-3 mx-1">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+        </div>
+    </div>    
+{% endblock all %}

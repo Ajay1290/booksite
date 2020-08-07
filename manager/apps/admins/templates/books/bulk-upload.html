@@ -1,0 +1,318 @@
+{% extends "apps/admins/base.html" %}
+{% import 'macros/forms.html' as input %}
+{% block head %}
+    <script src="{{ url_for('static', filename='src/JS/vendor/pdfjs/pdf.js') }}"></script>
+{% endblock head %}
+{% block content %}
+    <form method='POST' class="m-3" action="{{ url_for('admins.books_bulk')}}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="m-3 border-bottom">
+            <h1 class="f-28 d-inline-block">Bulk Upload Books</h1>
+            <button class="sw-btn f-12 px-3 float-right" type="submit">Submit</button>
+        </div>
+        
+        <div class="sw-panel sw-panel-design m-3">
+            <div class="sw-wing show" data-wing="1">
+                <div class="row">
+                    <div class="col-8 p-5" style="display: inline-flex;align-items: center;justify-content: center;flex-direction: column;" >
+                        <label for="file" style="cursor: pointer;">
+                            <img style="height: 200px;width: 320px;" src="{{ url_for('static', filename='src/IMAGES/book_logo.png')  }}">
+                            <h1 class="h2 mt-2 text-center">Upload Your Book</h1>
+                        </label>
+                        {{ form.file(accept="application/pdf",hidden=true, multiple=true ) }}
+                    </div>
+                    <div class="col-4 p-3 border-left">                        
+                        <h6 class="f-18">Tips For Uploading Better Books.</h6>
+                        <ul class="px-4 f-16">
+                            <li>You can only Upload PDF formate books.</li>
+                            <li>It will be better if you provide full books.</li>
+                            <li>It will be easier to browse if you provide books with front page as cover.</li>
+                            <li>Don't Upload Encrypted Books it will may rejected.</li>
+                            <li>Please Do not upload copyrighted material.</li>
+                            <li>You can upload your books, magezies, notes, papers, poem, lyrics, script anything.</li>
+                        </ul>                        
+                    </div>
+                </div>                
+                <span tabindex="2" id="next_pg" class="wing_btn text-hide" data-target="2" >_</span>
+            </div>
+
+
+        </div>
+    </form>
+{% endblock content %}
+
+{% block JS %}
+<script>
+    class BulkUpload{
+        constructor(input){
+            this.input = input;
+            this.files = [];
+            this.input.onchange = (evt) => {
+                this.files = Array.from(evt.target.files);
+                this.run();
+            }
+        }
+
+        run(){
+            Array.from(this.files).forEach((file,i)=>{this.arrangeWings(i+2);});
+            this.winger(1);
+            this.handelPDF(document.querySelector('.sw-panel').children[1], this.files[0]);
+        }
+
+        winger(i){
+            let panel = document.querySelector('.sw-panel');
+            let wings = Array.from(panel.children);
+            if(wings[i]){
+                if(wings[i].querySelector('#counter')){
+                    wings[i].querySelector('#counter').innerHTML = `${i}/${this.files.length}`
+                }
+                document.querySelector('.sw-wing.show').classList.remove('show');
+                wings[i].classList.add('show');
+                wings[i].querySelector('.wing_btn.next').onclick = (e) => {
+                    e.preventDefault();
+                    this.winger(i+1);
+                    this.handelPDF(wings[i+1], this.files[i]);
+                }
+                if(i>1){
+                    wings[i].querySelector('.wing_btn.back').onclick = (e) => {
+                        e.preventDefault();
+                        this.winger(i-1);
+                        this.handelPDF(wings[i-1], this.files[i-2]);
+                    }
+                }
+            }else{
+                if(wings[i-1].querySelector('#counter')){
+                    wings[i-1].querySelector('#counter').innerHTML = `${i-1}/${this.files.length}`
+                }
+                wings[i-1].querySelector('.wing_btn.next').style.display = 'none'
+            }
+        }
+
+        arrangeWings(i){
+            let wing = `
+                <div class="sw-wing" data-wing="${i}">
+                    <span id="counter"></span>
+                    <div class="row m-3">
+                        
+                        <div class="col-3 text-center"> 
+                            <canvas class="border" style="height:350px;width:220px" id="the-canvas"></canvas>
+                        </div>
+
+                        <div class="col-9">
+                            <div class="progress_bar" id="progress_bar"><div id="percent" class="percent">0%</div></div>
+                            <div class="text-right">
+                                <span tabindex="2"  class="sw-btn f-12 wing_btn back" data-target="${i-1}">
+                                Back</span>
+                                <span tabindex="2"  class="sw-btn f-12 wing_btn next" data-target="${i+1}">
+                                Next</span>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Title</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.title, "f-12 w-100 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Description</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.description, "f-12 w-100 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Category</div>
+                                <div class="p-2 col-8">
+                                    <select name="categories" class="form-control w-100 form-control-sm" id="categories">
+                                        <option value="0">Select a Category</option>
+                                        <option value="1">Programming</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Tags</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.tags, "f-12 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Authors</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.authors, "f-12 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Publisher</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.publisher, "f-12 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Language</div>
+                                <div class="p-2 col-8">
+                                    <select name="language" id="language" class="form-control form-control-sm">
+                                        <option value="0">Select a Language</option>
+                                        <option value="English">English</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">ISBN 10</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.isbn10, "f-12 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">ISBN 13</div>
+                                <div class="p-2 col-8">
+                                    {{ input.field(form.isbn13, "f-12 form-control form-control-sm") }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="p-2 col-4">Misc</div>
+                                <div class="p-2 col-8">
+                                    <input name="pages" id="pages" hidden>
+                                    <input name="size" id="size" hidden>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            `
+            document.querySelector('.sw-panel').insertAdjacentHTML('beforeEnd', wing)
+        }
+        
+        ValidateFile(file){        
+            if( file.type != "application/pdf") {
+                alert('Error : Not a PDF');
+                console.log('Error : Not a PDF');
+                window.location.reload();
+            }
+        };
+
+        handelPDF(wing, file){
+            console.log(file);
+            this.ValidateFile(file);
+            this.handleFile(wing, file);
+            let blob = new Blob([file], {type: "application/pdf"});
+            let pdfBlob = URL.createObjectURL(blob);
+            let loadingTask = pdfjsLib.getDocument(pdfBlob);
+            loadingTask.promise.then( (pdf) => {
+                this.getPDFMetadata(wing, pdf);
+                wing.querySelector('#size').value = (file.size / (1024 * 1024)).toFixed(2).toString();
+                pdf.getPage(1).then(function(page) {
+                    let scale = 1.5;
+                    let viewport = page.getViewport({ scale: scale, });
+                    let canvas = wing.querySelector('#the-canvas');
+                    let context = canvas.getContext('2d');
+                    canvas.height = viewport.height; canvas.width = viewport.width;
+                    let renderContext = {canvasContext: context, viewport: viewport};
+                    page.render(renderContext);
+                });            
+            });
+        }
+
+
+        // File Handler Function
+        handleFile(wing, file) {
+            console.log(file, 'handlefile')
+            let reader = new FileReader();
+            reader.readAsBinaryString(file);
+            var progress = wing.querySelector(`#percent`);
+            reader.onabort = function(e){
+                alert('File read cancelled');
+                console.log('File read cancelled');
+                window.location.reload();
+            };
+            reader.onloadstart = function(e){
+                wing.querySelector('.progress_bar').classList.add('loading');
+            };
+            reader.onprogress = function(evt){
+                if (evt.lengthComputable) {
+                    let percentLoaded = Math.round((evt.loaded / evt.total) * 100);
+                    progress.style.width = percentLoaded + '%';
+                    progress.textContent = percentLoaded + '%';        
+                }
+            };
+            reader.onload = function(theFile) {
+                return function(e) {
+                    progress.textContent = file.name
+                    wing.querySelector('#title').value = file.name;
+                }(file);
+            }
+        }
+
+
+
+        getPDFMetadata(wing, pdf){
+            wing.querySelector('#pages').value = pdf.numPages;
+            pdf.getMetadata().then(function(data) {
+                let book_cr_prod = ["Microsoft® Word 2013", "mPDF 6.0", "Microsoft® Word 2010", "Adobe PDF Library 10.0.1", "Adobe PDF Library 9.0", undefined, "Acrobat Distiller 7.0.5 (Windows)", "www.it-ebooks.info", "3-Heights(TM) PDF Optimization Shell 4.8.25.2 (http://www.pdf-tools.com)", "calibre 0.9.13 [http://calibre-ebook.com]","Adobe Acrobat 8.1", "pdfTeX-1.40.17"]
+                let book_cr_auth = ["www.it-ebooks.info", undefined]
+                if(data.metadata){
+                    if(data.metadata._metadataMap.get("dc:language")){
+                        wing.querySelector('#language').value = data.metadata._metadataMap.get("dc:language")
+                    }
+                    if (data['info']['Title'] != undefined){
+                        wing.querySelector('#title').value = data['info']['Title'];
+                    }
+                    if(data['info']['Subject'] != undefined){
+                        wing.querySelector('#title').value += " " + data['info']['Subject'];
+                    }
+                    if(!book_cr_prod.includes(data.metadata._metadataMap.get("dc:publisher"))){
+                        wing.querySelector('#publisher').value = data.metadata._metadataMap.get("dc:publisher");
+                    }
+                    else if(!book_cr_prod.includes(data.metadata._metadataMap.get("pdf:producer"))){
+                        wing.querySelector('#publisher').value = data.metadata._metadataMap.get("pdf:producer");
+                    }
+                    if(data['info']['Custom']){
+                        if(data['info']['Custom']['EBX_PUBLISHER']){
+                            wing.querySelector('#publisher').value = data['info']['Custom']['EBX_PUBLISHER'];
+                        }
+                        if(data['info']['Custom']['EBX_PUBLISHER']['name']){
+                            wing.querySelector('#publisher').value = data['info']['Custom']['EBX_PUBLISHER']['name'];
+                        }
+                    }
+                    if(!book_cr_auth.includes(data.metadata._metadataMap.get("dc:creator"))){
+                        wing.querySelector('#authors').value = data.metadata._metadataMap.get("dc:creator");
+                    }
+                }else{
+                    if(data['info']['Title'] != undefined){
+                        wing.querySelector('#title').value = data['info']['Title']
+                    }
+                    if(data['info']['Subject'] != undefined){
+                        wing.querySelector('#title').value += " " + data['info']['Subject']
+                    }
+                    if(data['info']['Custom']){
+                        if(data['info']['Custom']['EBX_PUBLISHER']){
+                            wing.querySelector('#publisher').value = data['info']['Custom']['EBX_PUBLISHER'];
+                        }
+                    }
+                    else if(!book_cr_prod.includes(data['info']['Producer'])){
+                        wing.querySelector('#publisher').value = data['info']['Producer']
+                    }
+                    if (!book_cr_auth.includes(data['info']['Author'])){
+                        wing.querySelector('#authors').value = data['info']['Author']
+                    }
+                }
+            }).catch(function(err) {
+                console.log('Error getting meta data');
+                console.log(err);
+            });
+        }
+
+    }
+
+    let uploader = new BulkUpload(document.getElementById('file'));
+
+</script>
+{% endblock JS %}

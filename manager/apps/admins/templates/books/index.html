@@ -1,0 +1,50 @@
+{% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="m-3 border-bottom">
+        <h1 class="f-28 d-inline-block">Books</h1>
+        <a href="{{ url_for('admins.books_bulk') }}" class="sw-btn f-12 mx-2 float-right">+ Bulk Books</a>
+        <a href="{{ url_for('admins.books_create') }}" class="sw-btn f-12 mx-2 float-right">+ New Book</a>
+    </div>
+    <div class="sw-table-area p-2">
+        <div class="sw-table-features">
+            <div class="sw-table-filter"></div>
+            <div class="sw-table-search"></div>
+            <div class="sw-table-dots"></div>
+        </div>
+        <table class="sw-table w-100 sw-table-rower sw-table-pager sw-table-infom">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Views</th>
+                    <th>Downloads</th>
+                    <th>Status</th>
+                    <th>Language</th>
+                    <th>comments</th>
+                    <th>reports</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books.items %}
+                <tr>
+                    <td class="{% if book.active %}bg-info text-white{% endif %}">{{book.id}}</td>
+                    <td style="width: 250px;">{{book.title | truncate(50) | safe }}</td>
+                    <td>{% if book.categories %}{{book.categories[0].name}}{% endif %}</td>
+                    <td class="sw-table-numeric">{{book.pg_views}}</td>
+                    <td class="sw-table-numeric">{{book.downloads}}</td>
+                    <td class="sw-table-numeric">{{book.post_status}}</td>
+                    <td class="sw-table-numeric">{{book.language}}</td>
+                    <td class="sw-table-numeric">{{book.comments.count()}}</td>
+                    <td class="sw-table-numeric">{{book.reports.__len__()}}</td>
+                    <td class="text-right" style="width: 200px;">
+                        <a class="b-4 text-info" href="{{url_for('admins.books_info', book_id=book.id) }}">View</a> | <a class="b-4 text-secondary" href="{{url_for('admins.books_edit', book_id=book.id) }}">Edit</a> | <a class="b-4 text-danger" href="{{url_for('admins.books_delete', book_id=book.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

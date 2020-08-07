@@ -1,0 +1,27 @@
+{% extends "apps/admins/base.html" %}
+{% import 'macros/forms.html' as input %}
+
+{% block content %}
+    <form action="{{ url_for('admins.quote_edit', user_id=quote.id) }}" class="sw-form" method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="m-3 border-bottom">
+            <h1 class="f-28 d-inline-block">Edit Quote</h1>
+            <button class="sw-btn f-12 px-3 float-right" type="submit">Submit</button>
+        </div>
+        
+        <div class="row m-0 sw-content-section mx-3">
+            <div class="col-8">
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Quote</div>
+                    <div class="col-8">{{ input.field(form.quote, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Quote By</div>
+                    <div class="col-8">{{ input.field(form.quote_by, "form-control form-control-sm") }}</div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock content %}

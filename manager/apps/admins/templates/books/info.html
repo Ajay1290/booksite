@@ -1,0 +1,113 @@
+{% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="m-3 border-bottom">
+        <h1 class="f-28 d-inline-block">Book Info</h1>
+        <a class="sw-btn f-12 px-3 float-right" href="{{url_for('admins.books_edit', book_id=book.id) }}">Edit</a>
+    </div>
+    
+    <div class="sw-content-section m-3 p-3" >
+        <div class="row">
+            <div class="col-3 text-center">
+                <img class="border" src="{{ url_for('static', filename='book_covers/'+ book.image[0].path) }}" alt="{{ book.title }}" style="height: 350px;width: 220px;">
+                <h1 class="f-14 text-muted mt-1">{{ book.file[0].path }}</h1>
+                <h1 class="f-16 my-2 border-bottom text-left pb-1 ">Stats.</h1>
+                <table class="text-left w-100" border="">
+                    <tbody>
+                        <tr>
+                            <td class="py-1 px-2">Status</td>
+                            <td class="py-1 px-2">{{ book.post_status }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Downloads</td>
+                            <td class="py-1 px-2">{{ book.downloads }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Views</td>
+                            <td class="py-1 px-2">{{ book.pg_views }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-9">
+                <h1 class="f-18 border-bottom mb-2 pb-1">Descriptive Details</h1>
+                <table class="w-100 p-2" border>
+                    <tbody>
+                        <tr>
+                            <td class="py-1 px-2">Id</td>
+                            <td class="py-1 px-2">{{ book.id }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Uploader</td>
+                            <td class="py-1 px-2">{{ Users.query.get_or_404(book.user_id).username }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Title</td>
+                            <td class="py-1 px-2">{{ book.title }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Description</td>
+                            <td class="py-1 px-2">{{ book.description }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Tags</td>
+                            <td class="py-1 px-2">
+                                {% for com in book.tags %}
+                                    <span>{{ com.name }}, </span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Pages</td>
+                            <td class="py-1 px-2">{{ book.pages }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Size</td>
+                            <td class="py-1 px-2">{{ book.size }} MB</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Categories</td>
+                            <td class="py-1 px-2">{% if book.categories[0] %} {{ book.categories[0].name }} {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Authors</td>
+                            <td class="py-1 px-2">
+                                {% for com in book.authors %}
+                                    <span>{{ com.name }}, </span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Publishers</td>
+                            <td class="py-1 px-2">{{ book.publishers[0].name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">Language</td>
+                            <td class="py-1 px-2">{{ book.language }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">ISBN10</td>
+                            <td class="py-1 px-2">{{ book.isbn10 }}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-1 px-2">ISBN13</td>
+                            <td class="py-1 px-2">{{ book.isbn13 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12">
+                    <div class="border-bottom my-2 pb-1">Reports</div>
+                    {% for com in book.reports %}
+                        <div>{{ com.id }} | {{ com.content }}</div>
+                    {% endfor %}
+            </div>
+            <div class="col-12">
+                    <div class="border-bottom my-2 pb-1">Comments</div>
+                    {% for com in book.comments %}
+                        <div>{{ com.id }} | {{ com.content }}</div>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

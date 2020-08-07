@@ -1,0 +1,8 @@
+__pycache__/
+node_modules/
+package-lock.json
+venv/
+manager/static/author_files/
+manager/static/book_covers/
+manager/static/books/
+manager/static/user_files/

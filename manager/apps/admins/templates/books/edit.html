@@ -1,0 +1,35 @@
+{% extends "apps/admins/base.html" %}
+{% import 'macros/forms.html' as input %}
+
+{% block content %}
+    <form action="{{ url_for('admins.users_create') }}" class="sw-form" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="m-3 border-bottom">
+            <h1 class="f-28 d-inline-block">Edit Books</h1>
+            <button class="sw-btn f-12 px-3 float-right" type="submit">Submit</button>
+        </div>
+        
+        <div class="sw-content-section mx-3">
+            <div class="row p-3">
+                <div class="col-12">
+                    <table class="w-100" border>
+                        <tbody>
+                            <tr>
+                                <td class="p-1 px-2">Upload a Book</td>
+                                <td class="p-1 p-2">
+                                    {{ input.field(form.file, "f-14") }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-1 px-2">Title</td>
+                                <td class="p-1 px-2">
+                                    {{ input.field(form.title, "form-control form-control-sm") }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock content %}
