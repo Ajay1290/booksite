@@ -9,6 +9,28 @@ from manager.apps.pages.routes import pages
 from manager.apps.authors.routes import authors
 from manager.models import *
 from flask_login import current_user, AnonymousUserMixin
+from celery import Celery
+
+CELERY_TASK_LIST = [
+    'manager.apps.users.tasks'
+]
+
+def create_celery_app(app=None):
+    app = app or create_app()
+
+    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'], include=CELERY_TASK_LIST)
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
@@ -19,7 +41,7 @@ def create_app():
         register_apps(app)
         extensions(app)
         authentication(app, Users)
-        locale(app)
+        # locale(app)
 
         
     return app
@@ -29,6 +51,7 @@ def extensions(app):
     db.init_app(app)
     login_manager.init_app(app)
     babel.init_app(app)
+    mail.init_app(app)
 
     return None
 

@@ -7,25 +7,16 @@
 
 {% block all %}
     <style>
-        table{
-            padding: 5px 10px;
-        }
-        table thead tr th{
-            height: 80px;
-            padding: 8px;
-        }
-        table tbody tr{
-            border: 1px solid #dee2e6;
-        }
+        table{padding: 5px 10px;}
+        table thead tr th{height: 80px;padding: 8px;}
+        table tbody tr{border: 1px solid #dee2e6;}
         table tbody tr td:nth-child(1){text-align: right;background-color: #f8f8f8;}
         table tbody tr td:nth-child(2){background-color: #fff;}
         table tbody tr td:nth-child(3){background-color: #fff;}
-        table tbody tr td{border: 1px solid #dee2e6;padding: 5px 10px;}
+        table tbody tr td{border: 1px solid #dee2e6;padding: 10px;}
     </style>
     <div class="mt-4 text-center">
-        <h1 class="f-26">
-            You have reached your daily limit of book downloading.
-        </h1>
+        <h1 class="f-26">You have reached your daily limit of book downloading.</h1>
         <div class="text-muted text-center f-20 px-3 m-2">
             Please login into your account or complete a simple registration (do not create more than one account) to download more books.
         </div>
@@ -67,8 +58,20 @@
                 </tr>
                 <tr>
                     <td class="">How to proceed</td>
-                    <td class="">You are here.</td>
-                    <td class="">Login or Sign Up</td>
+                    <td class="">
+                        {% if current_user.is_authenticated %}
+                            Logout
+                        {% else %}
+                            <span class="text-success b-3">Relax, You are Here.</span>
+                        {% endif %}
+                    </td>
+                    <td class="">
+                        {% if current_user.is_authenticated %}
+                            <span class="text-success">Relax, You are Here.</span>
+                        {% else %}
+                            <a href="{{ url_for('users.login') }}">Login</a> or <a href="{{ url_for('users.register') }}">Sign Up</a>
+                        {% endif %}
+                    </td>
                 </tr>
             </tbody>
         </table>

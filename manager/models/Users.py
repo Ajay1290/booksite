@@ -92,6 +92,24 @@ class Users(db.Model,ResourceMixin, UserMixin):
         return or_(*search_chain)
 
     @classmethod
+    def initialize_password_reset(cls, identity):
+        """
+        Generate a token to reset the password for a specific user.
+
+        :param identity: User e-mail address or username
+        :type identity: str
+        :return: User instance
+        """
+        u = Users.find_by_identity(identity)
+        reset_token = u.serialize_token()
+
+        # This prevents circular imports.
+        from manager.apps.users.tasks import deliver_password_reset_email
+        deliver_password_reset_email.delay(u.id, reset_token)
+
+        return u
+
+    @classmethod
     def is_last_admin(cls, user, new_role, new_active):
         is_changing_roles = user.role == 'admin' and new_role != 'admin'
         is_changing_active = user.active is True and new_active is None

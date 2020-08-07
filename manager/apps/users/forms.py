@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, StringField, PasswordField, BooleanField
+from wtforms import HiddenField, StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Optional, Regexp, EqualTo
 from wtforms_components import EmailField, Email
 from wtforms_alchemy.validators import Unique
@@ -31,7 +31,8 @@ class SignupForm(ModelForm):
     password = PasswordField(validators=[DataRequired(), Length(8, 128)])
     confirm_password = PasswordField(validators=[DataRequired(), EqualTo('password')])
 
-
+class SendEmailAgainForm(ModelForm):
+    send = SubmitField('Send Again')
 
 class UpdateCredentials(ModelForm):
     current_password = PasswordField('Current password', 

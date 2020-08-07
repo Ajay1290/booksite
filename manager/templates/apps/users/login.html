@@ -104,30 +104,31 @@
     </style>
 </head>
 <body>
+    <div>                                
+        <!-- Alert Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     <div class="login_wrapper">
         <div class="container login_inner_wrapper">
             <div class="login_white_wrapper">                
                 <h1 class="brand_logo_f text-center mt-5">BookElf</h1>
+                {% block body %}
                 <form class="login_inner_white_wrapper" method="POST" autocomplete="off" action="{{ url_for('users.login') }}">                    
                     {{ form.hidden_tag() }}
                     <div class="mx-3">                                                
                         <h5 class="f-28 text-left px-3 pb-0">Login</h5>
                         <hr class="sw-hr mt-1">                        
                         <div class="mx-4 mb-4">
-                            <div>                                
-                                <!-- Alert Messages -->
-                                {% with messages = get_flashed_messages(with_categories=true) %}
-                                    {% if messages %}
-                                        {% for category, message in messages %}
-                                            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-                                                {{ message }}
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
                             <div class="my-3">
                                 <label class="w-100 text-left f-12" for="username">Username or Email</label>
                                 {% if form.identity.errors %}
@@ -144,7 +145,7 @@
                             <div class="my-3">
                                 <div class="w-100 text-left">
                                     <label class="d-inline-block f-12" for="password">Password </label>
-                                    <a href="#" class="float-right d-inline-block f-12 mt-1">
+                                    <a href="{{ url_for('users.begin_password_reset') }}" class="float-right d-inline-block f-12 mt-1">
                                         Forgot Password ?
                                     </a>
                                 </div>
@@ -194,6 +195,7 @@
                         </div>                        
                     </div>                    
                 </form>
+                {% endblock body %}
                 <div class="f-12 mt-1 w-100 px-2">
                     <a href="#" class="text-left">Home</a>
 
