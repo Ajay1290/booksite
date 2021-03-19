@@ -3,8 +3,8 @@ import json
 
 class BaseConfig(object):
     DEBUG = False
-    TESTING = False    
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///C:\\Users\\LENOVO\\Desktop\\BookElf.in\\site.db'
+    TESTING = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///F:\\BookElf Versions\\Bookelf.in\\site.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LOG_LEVEL = 'DEBUG'
     SERVER_NAME = 'localhost:5000'
@@ -36,6 +36,10 @@ class BaseConfig(object):
         'kl' : 'Klingon'
     }
     BABEL_DEFAULT_LOCALE = 'en'
+
+    RATELIMIT_STORAGE_URL = CELERY_BROKER_URL
+    RATELIMIT_STRATEGY = 'fixed-window-elastic-expiry'
+    RATELIMIT_HEADERS_ENABLED = True
 
 class DevConfig(BaseConfig):
     DEBUG = True

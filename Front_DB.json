@@ -1,0 +1,13 @@
+{
+    "books": {
+        "New Arrivals": [1, 2, 15, 14, 13, 12, 11, 10, 9, 8, 7],
+        "Trending": [1, 2, 1, 2, 14, 13, 6, 12, 7, 10, 4, 8],
+        "Most Downloaded": [1, 2, 1, 4, 6, 11, 13, 8, 12, 9, 2, 15],
+        "Most Searched": [1, 2, 1, 13, 12, 4, 8, 3, 7, 14, 2, 5],
+        "Editor's choice": [],
+        "New inspiring": []
+    },
+    "tags": {},
+    "authors": {},
+    "publishers": {}
+}

@@ -7,7 +7,8 @@ authors = Blueprint('authors', __name__)
 @authors.route('/authors')
 def authors_all():
 	authors = Authors.query.all()
-	return render_template('apps/authors/authors.html', authors=authors)
+	random_tags = Tags.query.order_by(func.random()).limit(10)
+	return render_template('apps/authors/authors.html', authors=authors, random_tags=random_tags)
 
 @authors.route('/authors/<author_id>/')
 def author(author_id):
@@ -30,8 +31,8 @@ def author_follow(author_id):
 @authors.route('/publisher')
 def publishers_all():
 	publishers = Publishers.query.all()
-	
-	return render_template('apps/authors/publishers.html', publishers=publishers)
+	random_tags = Tags.query.order_by(func.random()).limit(10)
+	return render_template('apps/authors/publishers.html', publishers=publishers, random_tags=random_tags)
 
 @authors.route('/publishers/<publisher_id>/')
 def publisher(publisher_id):

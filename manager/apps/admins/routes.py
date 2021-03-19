@@ -22,7 +22,7 @@ def before_request():
 @admins.route('')
 def dashboard():
     d = Dashboard.group_and_count(Tags, Tags.color)
-    return render_template('dashboard.html', d=d)
+    return render_template('dashboard.html', d=d, Users=Users, Books=Books, Tags=Tags, Authors=Authors, Categories=Categories)
 
 # Users -----------------------------------------------------------------------
 @admins.route('/users', defaults={'page': 1})

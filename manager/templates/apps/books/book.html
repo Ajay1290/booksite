@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% import 'components/book_card.html' as book_card %}
 
 {% block meta %}
     <meta title="{{ book.title }} | BookElf.in">
@@ -225,40 +226,7 @@
                             <!-- All Tab -->
                             <div class="tab-pane fade show active" id="All" role="tabpanel" aria-labelledby="All-tab">                                
                                 {% for book_a in books_all %}
-                                    <article class="media border p-2 my-3 rounded mx-1">
-                                        <div class="im_co_wrap mr-md-3">                                        
-                                            <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}"
-                                            data-src="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}"
-                                            data-srcset="{{ url_for('static', filename='book_covers/' + book_a.image[0].path) }}">
-                                        </div>
-                                
-                                        <div class="media-body">
-                                            <div class="article-metadata">
-                                                <a class="mr-2" href="{{ url_for('users.account', username=book_a.user.username) }}">{{ book_a.user.username }}</a>
-                                                <small class="text-muted">
-                                                    {{ book_a.created_on.strftime('%d-%m-%Y') }}
-                                                </small>
-                                                <span class="ml-2">
-                                                    {% for t in book_a.tags[0:9] %}                                                        
-                                                        <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
-                                                    {% endfor %}
-                                                </span>
-                                            </div>
-                                            <hr class="my-1 mx-1">
-                                            <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_a.id) }}">
-                                                {{ book_a.title }}
-                                            </a>
-                                            <div class="f-14">
-                                                Downloads: {{ book_a.downloads }} | File: PDF,{{ book_a.size }} MB | Pages: {{ book_a.pages }} {% if book_a.authors %} | Authors: {% for auth in book_a.authors %}
-                                                <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
-                                                    {{auth.name}}{% if loop.nextitem %},{% endif %}
-                                                </a>{% endfor %}{% endif %}
-                                            </div>                                        
-                                            <p class="article-content mt-1 f-14">
-                                                {{ book_a.description| truncate(250) | safe }}
-                                            </p>
-                                        </div>
-                                    </article>
+                                    {{ book_card.card(book_a) }}
                                 {% endfor%}
                             </div>  
 
@@ -267,40 +235,7 @@
                                 {% if rec_books.__len__() > 0 %}
                                     {% for book_r in rec_books %}
                                         {% if book_r != book %}
-                                            <article class="media border p-2 my-3 rounded mx-1">
-                                                <div class="im_co_wrap mr-md-3">                                        
-                                                    <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}"
-                                                    data-src="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}"
-                                                    data-srcset="{{ url_for('static', filename='book_covers/' + book_r.image[0].path) }}">
-                                                </div>
-                                        
-                                                <div class="media-body">
-                                                    <div class="article-metadata">
-                                                        <a class="mr-2" href="{{ url_for('users.account', username=book_r.user.username) }}">{{ book_r.user.username }}</a>
-                                                        <small class="text-muted">
-                                                            {{ book_r.created_on.strftime('%d-%m-%Y') }}
-                                                        </small>
-                                                        <span class="ml-2">
-                                                            {% for t in book_r.tags[0:9]  %}
-                                                                <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
-                                                            {% endfor %}
-                                                        </span>
-                                                    </div>
-                                                    <hr class="my-1 mx-1">
-                                                    <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_r.id) }}">
-                                                        {{ book_r.title }}
-                                                    </a>
-                                                    <div class="f-14">
-                                                        Downloads: {{ book_r.downloads }} | File: PDF,{{ book_r.size }} MB | Pages: {{ book_r.pages }} {% if book_r.authors %} | Authors: {% for auth in book_r.authors %}
-                                                        <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
-                                                            {{auth.name}}{% if loop.nextitem %},{% endif %}
-                                                        </a>{% endfor %}{% endif %}
-                                                    </div>                                        
-                                                    <p class="article-content mt-1 f-14">
-                                                        {{ book_r.description| truncate(250) | safe }}
-                                                    </p>
-                                                </div>
-                                            </article>
+                                            {{ book_card.card(book_r) }}
                                         {% endif %}
                                     {% endfor %}
                                 {% else %}
@@ -313,40 +248,7 @@
                                 {% if uploader_books.count() > 1 %}
                                     {% for book_u in uploader_books %}
                                         {% if book_u != book %}
-                                            <article class="media border p-2 my-3 rounded mx-1">
-                                                <div class="im_co_wrap mr-md-3">                                        
-                                                    <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}"
-                                                    data-src="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}"
-                                                    data-srcset="{{ url_for('static', filename='book_covers/' + book_u.image[0].path) }}">
-                                                </div>
-                                        
-                                                <div class="media-body">
-                                                    <div class="article-metadata">
-                                                        <a class="mr-2" href="{{ url_for('users.account', username=book_u.user.username) }}">{{ book_u.user.username }}</a>
-                                                        <small class="text-muted">
-                                                            {{ book_u.created_on.strftime('%d-%m-%Y') }}
-                                                        </small>
-                                                        <span class="ml-2">
-                                                            {% for t in book_u.tags[0:9]  %}
-                                                                <a class="mx-1 px-2 sharp-txt b-1 f-12 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
-                                                            {% endfor %}
-                                                        </span>
-                                                    </div>
-                                                    <hr class="my-1 mx-1">
-                                                    <a class="f-18 b-3 article-title" href="{{ url_for('books.book', book_id=book_u.id) }}">
-                                                        {{ book_u.title }}
-                                                    </a>
-                                                    <div class="f-14">
-                                                        Downloads: {{ book_u.downloads }} | File: PDF,{{ book_u.size }} MB | Pages: {{ book_u.pages }} {% if book_u.authors %} | Authors: {% for auth in book_u.authors %}
-                                                        <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
-                                                            {{auth.name}}{% if loop.nextitem %},{% endif %}
-                                                        </a>{% endfor %}{% endif %}
-                                                    </div>                                        
-                                                    <p class="article-content mt-1 f-14">
-                                                        {{ book_u.description| truncate(250) | safe }}
-                                                    </p>
-                                                </div>
-                                            </article>
+                                            {{ book_card.card(book_u) }}
                                         {% endif %}
                                     {% endfor%}
                                 {% else %}

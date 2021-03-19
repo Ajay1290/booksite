@@ -6,14 +6,16 @@
 {% block content %}
     <div class="bg-white mb-3 p-2 mr-2 rounded border">
         <h2 class="h3 px-2 mb-0 pb-0">New Arrivals</h2>
-        <hr class="m-1 p-0 border">					
+        <hr class="m-1 p-0 border">				
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['new_arrivals'] %}
+                {% if book %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
                     </a>
                 </div>
+                {% endif %}
             {% endfor %}            
         </div>
     </div>
@@ -22,26 +24,14 @@
         <h2 class="h3 px-2 mb-0 pb-0">Trending</h2>
         <hr class="m-1 p-0 border">					
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['trending'] %}
+                {% if book %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
                     </a>
                 </div>
-            {% endfor %}            
-        </div>
-    </div>
-
-    <div class="bg-white my-4 p-2 mr-2 rounded border">
-        <h2 class="h3 px-2 mb-0 pb-0">Most Favourable</h2>
-        <hr class="m-1 p-0 border">					
-        <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
-                <div class="item ">
-                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
-                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
-                    </a>
-                </div>
+                {% endif %}
             {% endfor %}            
         </div>
     </div>
@@ -50,12 +40,14 @@
         <h2 class="h3 px-2 mb-0 pb-0">Most Downloaded</h2>
         <hr class="m-1 p-0 border">					
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['most_downloaded'] %}
+                {% if book %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
                     </a>
                 </div>
+                {% endif %}
             {% endfor %}            
         </div>
     </div>
@@ -64,12 +56,14 @@
         <h2 class="h3 px-2 mb-0 pb-0">Most Searched</h2>
         <hr class="m-1 p-0 border">					
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['most_searched'] %}
+                {% if book %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
                     </a>
                 </div>
+                {% endif %}
             {% endfor %}            
         </div>
     </div>
@@ -78,12 +72,14 @@
         <h2 class="h3 px-2 mb-0 pb-0">Editor's Choice</h2>
         <hr class="m-1 p-0 border">					
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['editors_choice'] %}
+                {% if book %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
                     </a>
                 </div>
+                {% endif %}
             {% endfor %}            
         </div>
     </div>
@@ -92,7 +88,7 @@
         <h2 class="h3 px-2 mb-0 pb-0">New Inspiring</h2>
         <hr class="m-1 p-0 border">					
         <div class="owl-carousel owl-theme p-2">
-            {% for book in books %}
+            {% for book in organizer['new_inspiring'] %}
                 <div class="item ">
                     <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
                         <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
