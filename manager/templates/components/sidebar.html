@@ -3,16 +3,16 @@
     <section></section>
     
     <!-- Tags -->
-    <section class="bg-white border mb-3 p-2 rounded">
+    <section class="bg-white border mb-3 p-3 rounded">
         <h3 class="h4 ">Programming Tags</h3>        
         <p class='text-muted f-14'>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla, voluptas.
+            Programming is the art of creating programs so here are some tags on it.
         </p>
         <ul class="list-group">
             {% for tag in random_tags %}
                 <a title="Books by {{tag.name}}" href="{{ url_for('tags.tag', tag_id=tag.id, t=tag.name) }}" style="text-decoration:none; ">
-                    <li class="list-group-item list-group-item-light btn btn-{{tag.colour}} category_side" >
-                        {{tag.name}}
+                    <li class="list-group-item list-group-item-light btn btn-{{tag.color}} category_side" >
+                        {{tag.name}}                        
                     </li>
                 </a>
             {% endfor %}
@@ -23,7 +23,7 @@
     <section></section>
     
     <!-- BooksLetterBox -->
-    <section class="bg-white border mb-3 p-2 rounded">
+    <section class="bg-white border mb-3 p-3 rounded">
         <h3 class="h4 ">Programming Tags</h3>        
         <p class='text-muted f-14'>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla, voluptas.
@@ -31,7 +31,7 @@
         <ul class="list-group">
             {% for tag in random_tags %}
                 <a title="Books by {{tag.name}}" href="{{ url_for('tags.tag', tag_id=tag.id, t=tag.name) }}" style="text-decoration:none; ">
-                    <li class="list-group-item list-group-item-light btn btn-{{tag.colour}} category_side" >
+                    <li class="list-group-item list-group-item-light btn btn-{{tag.color}} category_side" >
                         {{tag.name}}
                     </li>
                 </a>
@@ -40,7 +40,7 @@
     </section>
     
     <!-- Tags -->
-    <section class="bg-white border mb-3 p-2 rounded">
+    <section class="bg-white border mb-3 p-3 rounded">
         <h3 class="h4 ">Programming Tags</h3>        
         <p class='text-muted f-14'>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla, voluptas.
@@ -48,7 +48,7 @@
         <ul class="list-group">
             {% for tag in random_tags %}
                 <a title="Books by {{tag.name}}" href="{{ url_for('tags.tag', tag_id=tag.id, t=tag.name) }}" style="text-decoration:none; ">
-                    <li class="list-group-item list-group-item-light btn btn-{{tag.colour}} category_side" >
+                    <li class="list-group-item list-group-item-light btn btn-{{tag.color}} category_side" >
                         {{tag.name}}
                     </li>
                 </a>
@@ -60,7 +60,7 @@
     <section></section>
 
     <!-- Tags -->
-    <section class="bg-white border mb-3 p-2 rounded">
+    <section class="bg-white border mb-3 p-3 rounded">
         <h3 class="h4 ">Programming Tags</h3>        
         <p class='text-muted f-14'>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla, voluptas.
@@ -68,7 +68,7 @@
         <ul class="list-group">
             {% for tag in random_tags %}
                 <a title="Books by {{tag.name}}" href="{{ url_for('tags.tag', tag_id=tag.id, t=tag.name) }}" style="text-decoration:none; ">
-                    <li class="list-group-item list-group-item-light btn btn-{{tag.colour}} category_side" >
+                    <li class="list-group-item list-group-item-light btn btn-{{tag.color}} category_side" >
                         {{tag.name}}
                     </li>
                 </a>

@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request , send_file , abort, Blueprint, current_app, session
 import os
-from manager.ext import db
+from manager.ext import db, limiter
 import sys
 import secrets
 import urllib.parse
@@ -113,18 +113,8 @@ def book_upload():
 
 
 @books.route('/books/<book_id>/download')
+@limiter.limit('1/day')
 def book_download(book_id):
-    if not 'downloads' in session.keys():
-        session['downloads'] = 0
-    if session['downloads'] >= 5:
-        if current_user.is_authenticated:
-            if session['downloads'] >= 10:
-                flash('You already downloaded 10 Books a day.', 'success')
-                return redirect(url_for('main.home'))
-        else:
-            flash('You already downloaded 5 Books a day.', 'success')
-            return redirect(url_for('main.home'))
-    session['downloads'] += 1
     book = Books.query.get_or_404(book_id)
     if current_user.is_anonymous == False:
         download = Downloads(user_id=current_user.id, book_id=book.id)

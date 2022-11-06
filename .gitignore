@@ -6,3 +6,4 @@ manager/static/author_files/
 manager/static/book_covers/
 manager/static/books/
 manager/static/user_files/
+site.db

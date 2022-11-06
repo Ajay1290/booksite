@@ -1,1 +1,29 @@
 {% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row my-3">
+            <div class="col-12">
+                <div class="sw-content-section d-inline-block mx-1 p-2 text-center" style="width: 200px;">
+                    <h6 class="f-18 b-3 sharp-txt">Total Users</h6> {{ Users.query.all().__len__() }}
+                </div>
+
+                <div class="sw-content-section d-inline-block mx-1 p-2 text-center" style="width: 200px;">
+                    <h6 class="f-18 b-3 sharp-txt">Total Books</h6> {{ Books.query.all().__len__() }}
+                </div>
+
+                <div class="sw-content-section d-inline-block mx-1 p-2 text-center" style="width: 200px;">
+                    <h6 class="f-18 b-3 sharp-txt">Total Tags</h6> {{ Tags.query.all().__len__() }}
+                </div>
+
+                <div class="sw-content-section d-inline-block mx-1 p-2 text-center" style="width: 200px;">
+                    <h6 class="f-18 b-3 sharp-txt">Total Authors</h6> {{ Authors.query.all().__len__() }}
+                </div>
+
+                <div class="sw-content-section d-inline-block mx-1 p-2 text-center" style="width: 200px;">
+                    <h6 class="f-18 b-3 sharp-txt">Total Categories</h6> {{ Categories.query.all().__len__() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

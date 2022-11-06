@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% import 'macros/forms.html' as input %}
+{% block meta %}
+    <meta title="Browse books by tag on BookElf | BookElf.in ">
+    <meta name="description" content="Browse books more effectivly yet effortlessly by tags. Join BookElf and share your books with people to empower our future genration with Knowledge.">
+{% endblock meta %}
+
+{% block all %}
+<div class="container mt-4">
+    <div class="sw-content-section p-3">
+        <h5>Give us a Feedback.</h5>
+    </div>
+    <div class="sw-content-section p-3 mt-4">
+        <form action="{{ url_for('pages.feedback') }}" class="sw-form  p-3">
+            <div class="text-right m-2">
+                <button type="submit" class="sw-btn f-14 px-3">Submit</button>
+            </div>
+
+            <div class="mx-3 my-3">
+                {{ input.field(form.email) }}
+            </div>
+            <div class="mx-3 mb-2">
+                {{ input.field(form.content) }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock all %}
