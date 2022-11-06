@@ -1,0 +1,50 @@
+{% extends "apps/admins/base.html" %}
+{% import 'macros/forms.html' as input %}
+
+{% block content %}
+    <form action="{{ url_for('admins.users_create') }}" class="sw-form" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="m-3 border-bottom">
+            <h1 class="f-28 d-inline-block">Edit Users</h1>
+            <button class="sw-btn f-12 px-3 float-right" type="submit">Submit</button>
+        </div>
+        
+        <div class="row m-0 sw-content-section mx-3">
+            <div class="col-8">
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Username</div>
+                    <div class="col-8">{{ input.field(form.username, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Email</div>
+                    <div class="col-8">{{ input.field(form.email, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Phone</div>
+                    <div class="col-8">{{ input.field(form.phone, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Password</div>
+                    <div class="col-8">{{ input.field(form.password, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Confirm Password</div>
+                    <div class="col-8">{{ input.field(form.confirm_password, "form-control form-control-sm") }}</div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Role</div>
+                    <div class="col-8">
+                        <select class="w-100 form-control form-control-sm" name="role" id="role">
+                            <option value="member">Member</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-4 pl-5">Locale</div>
+                    <div class="col-8">{{ input.field(form.locale, "form-control form-control-sm") }}</div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock content %}

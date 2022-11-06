@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block meta %}
+    <meta title="Upload Your Books on BookElf | BookElf.in ">
+    <meta name="description" content="Upload your books on BookElf. Share them or store them for better use. Join BookElf and share your books with people to empower our future genration with Knowledge.">
+{% endblock meta %}
+{% block head %}
+    <script src="{{ url_for('static', filename='src/JS/vendor/pdfjs/pdf.js') }}"></script>
+{% endblock head %}
+{% block all %}
+
+    <div class="container mt-4">
+        <legend class="sw-content-section p-2 px-3 mb-3">Upload Book</legend>
+        <form method='POST' class="sw-panel sw-panel-design" action="/books/upload" enctype="multipart/form-data" >
+            {{ form.hidden_tag() }}        
+            
+            <div class="sw-wing show" data-wing="1">
+                <div class="row">
+                    <div class="col-8 p-5" style="display: inline-flex;align-items: center;justify-content: center;flex-direction: column;" >
+                        <label for="file" style="cursor: pointer;">
+                            <img style="height: 200px;width: 320px;" src="{{ url_for('static', filename='src/IMAGES/book_logo.png')  }}">
+                            <h1 class="h2 mt-2 text-center">Upload Your Book</h1>
+                        </label>
+                        {{ form.file(accept="application/pdf",hidden=true, oninput="on_book_post()" ) }}
+                    </div>
+                    <div class="col-4 p-3 border-left">                        
+                        <h6 class="f-18">Tips For Uploading Better Books.</h6>
+                        <ul class="px-4 f-16">
+                            <li>You can only Upload PDF formate books.</li>
+                            <li>It will be better if you provide full books.</li>
+                            <li>It will be easier to browse if you provide books with front page as cover.</li>
+                            <li>Don't Upload Encrypted Books it will may rejected.</li>
+                            <li>Please Do not upload copyrighted material.</li>
+                            <li>You can upload your books, magezies, notes, papers, poem, lyrics, script anything.</li>
+                        </ul>                        
+                    </div>
+                </div>                
+                <span tabindex="2" id="next_pg" class="wing-btn text-hide" data-target="2" >_</span>
+            </div>
+
+            <div class="sw-wing" data-wing="2">
+                <div class="row p-4">
+                    
+                    <!-- Canvas -->
+                    <div class="col-md-3" style="text-align: center;">
+                        <canvas class="sw-content-section border" id="the-canvas"></canvas>
+                    </div>
+
+                    <!-- Data -->
+                    <div class="col-md-9">
+                        <div id="progress_bar"><div class="percent">0%</div></div>
+                        <!-- Submit buttons -->
+                        <div class="text-right">
+                            <button class="sw-btn f-14 px-3" id="upload-btn" type="submit">Upload</button>
+                            <a href="{{ url_for('books.book_upload') }}">
+                                <div class="sw-btn sw-btn-outline f-14 px-3 cancle_btn ">Cancle</div>
+                            </a>
+                        </div>
+
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Basic Info</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="Advance-tab" data-toggle="tab" href="#Advance" role="tab" aria-controls="Advance" aria-selected="false">Advance</a>
+                            </li>                            
+                        </ul>
+                        
+                        <div class="tab-content" id="myTabContent">
+
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <fieldset class="form-group mx-md-3 my-3">
+                                    <!-- Title -->
+                                    <div class="form-group">
+                                        {% if form.title.errors %}
+                                            {{ form.title(class="form-control form-control-lg f-16 py-1 px-2 is-invalid" , placeholder="Book title") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.title.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.title(class="form-control form-control-lg f-16 py-1 px-2", placeholder="Book title") }} 
+                                        {% endif %}
+                                    </div>
+            
+                                    <!-- Tags -->
+                                    <div class="form-group">
+                                        {% if form.tags.errors %}
+                                            {{ form.tags(class="form-control form-control-lg f-16 py-1 px-2 is-invalid", placeholder="Categories related to book") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.tags.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.tags(class="form-control form-control-lg f-16 py-1 px-2", placeholder="Categories related to book") }}
+                                            <small class="help-block">{{ form.tags.description|safe }}</small>
+                                        {% endif %}
+                                    </div>
+                
+                                    <!-- Content -->
+                                    <div class="form-group">
+                                        {% if form.description.errors %}
+                                            {{ form.description(class="form-control form-control-lg f-16 py-1 px-2 is-invalid",style="min-height:100px", placeholder="Tell little bit about book...." ) }}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.description.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.description(class="form-control form-control-lg f-16 py-1 px-2", style="min-height:100px" , placeholder="Tell little bit about book....") }}
+                                        {% endif %}                          
+                                    </div>
+                                </fieldset>
+                            </div>
+            
+                            <!-- Advance Tab -->
+                            <div class="tab-pane fade" id="Advance" role="tabpanel" aria-labelledby="Advance-tab">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <!-- isbn10 -->
+                                        <div class="form-group">
+                                            {% if form.isbn10.errors %}
+                                                {{ form.isbn10(class="form-control form-control-sm f-14 py-1 px-2 is-invalid" , placeholder="Book isbn10") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.isbn10.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.isbn10(class="form-control form-control-sm f-14 py-1 px-2", placeholder="Book isbn10") }} 
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- authors -->
+                                        <div class="form-group">
+                                            {% if form.authors.errors %}
+                                                {{ form.authors(class="form-control form-control-sm f-14 py-1 px-2 is-invalid" , placeholder="Book authors") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.authors.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.authors(class="form-control form-control-sm f-14 py-1 px-2", placeholder="Book authors") }} 
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <!-- categories -->
+                                            <select name="categories" class="w-100 form-control form-control-sm" id="categories">
+                                                <option value="0">Select a Categories</option>
+                                                {% for cat in categories %}
+                                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <!-- language -->
+                                                    <select name="language" class="form-control-sm form-control" id="language">
+                                                        <option value="0">Language</option>
+                                                        <option value="en">English</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <!-- post_status -->
+                                                    <select name="post_status" id="post_status" class="form-control-sm form-control">
+                                                        <option value="0">Live</option>
+                                                        <option value="-1">Draft</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+
+                                        <!-- isbn13 -->
+                                        <div class="form-group">
+                                            {% if form.isbn13.errors %}
+                                                {{ form.isbn13(class="form-control form-control-sm f-14 py-1 px-2 is-invalid" , placeholder="Book isbn13") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.isbn13.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.isbn13(class="form-control form-control-sm f-14 py-1 px-2", placeholder="Book isbn13") }} 
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- publisher -->
+                                        <div class="form-group">
+                                            {% if form.publisher.errors %}
+                                                {{ form.publisher(class="form-control form-control-sm f-14 py-1 px-2 is-invalid" , placeholder="Book publisher") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.publisher.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.publisher(class="form-control form-control-sm f-14 py-1 px-2", placeholder="Book publisher") }} 
+                                            {% endif %}
+                                        </div>
+
+                                        <h4 onclick="$('#thu_link').click();" class="sw-btn p-2 f-12 w-100" style="cursor: pointer;">Upload your own book thumbnail</h4>
+                                        <input class="btn btn-primary" id="thu_link" type="file" id="book_img_fs" name="book_img_fs" accept="image/*"  style="display: none;">
+
+                                        <input type="text" name="pages" id="pages" hidden>
+                                        <input type="text" name="size" id="size" hidden>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div> 
+                    
+                    <div id="loader-wing" class="col-12" style="height: 100%;width: 100%;position: absolute;display: none;align-items: center;top: 0;background: rgba(0,0,0,0.2);justify-content: center;left: 0;">
+                        <span style="background: #fff;padding: 10px;border-radius: 4px;">
+                            <div class="spinner-border" role="status" style="display: inline-block;">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            
+        </form>
+
+        <div class="sw-content-section p-3 my-4">
+            <h4>Help and Suggestions</h4>
+            <hr class="mt-0 mb-0 mb-sm-3">
+            <p class="mt-1 f-14">
+                By submitting your book to BookElf, you acknowledge that you agree to BookElf's <a href="#">Terms of Service</a> and <a href="#">Community Guidelines</a>.
+                Please be sure not to violate others' copyright or privacy rights.
+                <a href="#">Learn more</a>
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='src/JS/new_book.js') }}"></script>
+{% endblock all %}
+
+{% block js %}
+
+{% endblock js %}

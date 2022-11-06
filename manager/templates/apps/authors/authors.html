@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">    
+{% endblock head %}
+{% block content %}
+    <div class="row ">
+        <div class="col-12">
+            <div class="bg-white p-2 mr-2 rounded border">
+                <h2 class="h3 px-2 mb-0 pb-0">New Arrivals</h2>
+                <hr class="m-1 p-0 border">					
+                <div class="owl-carousel owl-theme p-2">
+                    {% for author in authors %}
+                        <div class="item">
+                                {% if not author.image_file %}
+                                    <img class=" img-thumbnail rounded-circle" alt="{{author.name}}" style="height: 220px;width: 170px;" src="{{ url_for( 'static', filename='author_files/default.jpg' ) }}">
+                                {% else %}
+                                    <img class=" img-thumbnail" alt="{{author.name}}" style="height: 220px;width: 170px;" src="{{ url_for( 'static', filename='author_file/' + author.image_file[0].path ) }}">
+                                {% endif %}
+                            <a title="{{ author.name }}" class="d-inline-block text-center w-100" href="{{ url_for('authors.author', author_id=author.id) }}">{{ author.name }}</a>
+                        </div>
+                    {% endfor %}            
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block JS %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop:false,
+            margin:10,
+            nav:true,
+            lazyLoad:true,
+            rewind:false,
+            dots:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                440:{
+                    items:2
+                },
+                570:{
+                    items:3
+                },
+                720:{
+                    items:4
+                },
+                1200:{
+                    items:5
+                }
+            }
+        });  
+    </script>
+{% endblock JS %}

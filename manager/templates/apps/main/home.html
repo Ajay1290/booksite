@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block meta %}{% endblock meta %}
+
+{% block head %}
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">     -->
+{% endblock head %}
+
+{% block content %}
+    <div class="bg-white mb-3 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">New Arrivals</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">Trending</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">Most Favourable</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">Most Downloaded</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">Most Searched</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">Editor's Choice</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+
+    <div class="bg-white my-4 p-2 mr-2 rounded border">
+        <h2 class="h3 px-2 mb-0 pb-0">New Inspiring</h2>
+        <hr class="m-1 p-0 border">					
+        <div class="owl-carousel owl-theme p-2">
+            {% for book in books %}
+                <div class="item ">
+                    <a title="{{ book.title }}" href="{{ url_for('books.book', book_id=book.id) }}">
+                        <img class=" img-thumbnail" alt="{{book.title}}" style="height: 300px;width: 200px;" src="{{ url_for( 'static', filename='book_covers/' + book.image[0].path ) }}">	
+                    </a>
+                </div>
+            {% endfor %}            
+        </div>
+    </div>
+{% endblock content %} 
+
+{% block JS %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop:false,
+            margin:10,
+            nav:true,
+            lazyLoad:true,
+            rewind:false,
+            dots:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                440:{
+                    items:2
+                },
+                570:{
+                    items:3
+                },
+                720:{
+                    items:4
+                },
+                1200:{
+                    items:5
+                }
+            }
+        });
+    </script>
+{% endblock JS %}

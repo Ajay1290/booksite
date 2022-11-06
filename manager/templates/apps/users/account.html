@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block all %}
+    <div class="row mt-3 f-14">
+        <div class="col-3">
+            
+            <div class="sw-content-section p-2 rounded">
+                <div class="text-center">
+                    {% if not user.image %}
+                        <img class="border" style="display:inline-block;width:155px;height:157px;border-radius:50%;" src="{{url_for('static', filename='user_files/default.jpg')}}" alt="Image of {{ user.name }}">
+                    {% else %}
+                        <img class="border" style="display:inline-block;width:155px;height:157px;border-radius:50%;" src="{{url_for('static', filename='author_files/' + user.image[0].path)}}" alt="Image of {{ user.name }}">
+                    {% endif %}
+
+                    <h1 class="f-22 mt-2">{{ user.username }}</h1>
+                </div>
+
+                <div class="f-18 m-2">
+                    Books Uploaded : {{ user.books.__len__() }}
+                </div>
+                {% if current_user.is_authenticated %}
+                    {% if current_user == user %}
+                        <ul>
+                            <li>Privacy & Security</li>
+                            <li>Change Password</li>
+                            <li>Activity</li>
+                            <li>Push Notifications</li>
+                            <li>Email & SMS</li>
+                        </ul>
+                    {% endif %}
+                {% endif %}
+                <div>
+                    <a href="{{ url_for('users.logout') }}">
+                        <button type="button" class="sw-btn f-12">Logout</button>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-7 px-0">            
+            <div>
+                {% for book in books.items %}
+                    <article class="media sw-content-section border p-2 my-3 rounded mx-1">
+                        <div class="im_co_wrap mr-md-3">                                        
+                            <img class="img-thumbnail img_cover_wrap" src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}"
+                            data-src="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}"
+                            data-srcset="{{ url_for('static', filename='book_covers/' + book.image[0].path) }}">
+                        </div>
+                
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2 f-14" href="{{ url_for('users.account', username=book.user.username) }}">{{ book.user.username }}</a>
+                                <small class="text-muted">
+                                    {{ book.created_on.strftime('%d-%m-%Y') }}
+                                </small>
+                                <span class="ml-2">
+                                    {% for t in book.tags[0:4] %}
+                                        <a class="f-12 b-1 border sharp-txt px-2 mx-1 badge badge-{{t.color}}" href="{{ url_for('tags.tag', tag_id=t.id) }}"> {{ t.name }} </a>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            <hr class="my-1 mx-1">
+                            <a class="f-18 b-3 sharp-txt article-title" href="{{ url_for('books.book', book_id=book.id) }}">
+                                {{ book.title }}
+                            </a>
+                            <div class="f-12">
+                                Downloads: {{ book.downloads }} | File: PDF,{{ book.size }} MB | Pages: {{ book.pages }} {% if book.authors %} | Authors: {% for auth in book.authors %}
+                                <a href="{{ url_for('authors.author', author_id=auth.id, a=auth.name) }}">
+                                    {{auth.name}}{% if loop.nextitem %},{% endif %}
+                                </a>{% endfor %}{% endif %}
+                            </div>                                        
+                            <p class="article-content mt-1 f-14">
+                                {{ book.description| truncate(250) | safe }}
+                            </p>
+                        </div>
+                    </article>
+                {% endfor %}
+                
+                {% for page_num in books.iter_pages(left_edge=1, right_edge=1,
+                    left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if books.page == page_num %}
+                            <a class="btn btn-info mb-4" href="{{ url_for('users.account', username=user.username, page=page_num) }}">
+                                {{ page_num }}</a>
+                        {% else %}
+                            <a class="btn btn-outline-info mb-4" href="{{ url_for('users.account',username=user.username, page=page_num) }}">{{ page_num }}</a>
+                        {% endif %} 
+                    {% else %}
+                        ....
+                    {% endif %}
+                {% endfor %}    
+
+            </div>            
+        </div>
+
+        <div class="col-2">
+            
+        </div>
+    </div>    
+{% endblock all %}
+
+{% block js %}
+{% endblock js %}
+    
