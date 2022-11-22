@@ -130,6 +130,10 @@ class BookForm(ModelForm):
                                                         insted of space use _ underscore')
 
 
+class AuthorForm(ModelForm):
+    name = StringField('Name', validators=[DataRequired()])
+    image = FileField('Author Image', validators=[FileAllowed(['jpg','jpeg', 'png'])])
+
 
 class bulkBook(ModelForm):
     title = TextAreaField('Title', validators=[DataRequired()])

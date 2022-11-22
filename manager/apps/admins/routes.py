@@ -5,7 +5,7 @@ from flask_login import login_required
 from manager.apps.users.decorators import role_required
 from manager.models import *
 from manager.apps.admins.models import Dashboard
-from manager.apps.admins.forms import UserForm, BookForm, bulkBook, QuoteForm
+from manager.apps.admins.forms import UserForm, BookForm, bulkBook, QuoteForm, AuthorForm
 from manager.apps.admins.forms import get_authors_from_string, get_tags_from_string
 from manager.apps.admins.forms import get_publisher_from_string
 
@@ -192,7 +192,7 @@ def books_delete(book_id):
 	flash("Your Book has been Deleted!",'success')
 	return redirect(url_for('admins.books'))
 
-# Users -----------------------------------------------------------------------
+# Quotes -----------------------------------------------------------------------
 @admins.route('/quotes', defaults={'page': 1})
 @admins.route('/quotes/page/<int:page>')
 def quotes(page):
@@ -234,3 +234,50 @@ def quote_delete(user_id):
 	db.session.commit()
 	flash("Your User has been Deleted!",'success')
 	return redirect(url_for('admins.quotes'))
+
+# Authors -----------------------------------------------------------------------
+@admins.route('/authors', defaults={'page': 1})
+@admins.route('/authors/page/<int:page>')
+def authors(page):
+	paginated_users = Authors.query.paginate(page, 50, True)
+	return render_template('authors/index.html', authors=paginated_users)
+
+@admins.route('/authors/info/<author_id>')
+def author_info(author_id):
+	author = Authors.query.get(author_id)
+	return render_template('authors/info.html', author=author)
+
+
+@admins.route('/authors/create', methods=["GET","POST"])
+def author_create():
+	form = QuoteForm()
+	if form.validate_on_submit():
+		q = Authors(quote=form.quote.data,
+					  quote_by=form.quote_by.data,)
+		db.session.add(q)
+		db.session.commit()
+		flash("Your Quote has been Created!",'success')
+		return redirect(url_for('admins.authors'))
+	return render_template('authors/create.html', form=form)
+
+@admins.route('/authors/edit/<author_id>', methods=["GET","POST"])
+def author_edit(author_id):
+	author = Authors.query.get(author_id)
+	form = AuthorForm()
+	if request.method == 'GET':
+		form.name.data 		= 	author.name
+	if form.validate_on_submit():
+		author.name 			=	 form.name.data
+		db.session.commit()
+		flash("Your Author has been Updated!", 'success')
+		return redirect(url_for('admins.authors'))
+	return render_template('authors/edit.html', author=author, form=form)
+
+
+@admins.route('/authors/delete/<author_id>')
+def author_delete(author_id):
+	author = Authors.query.get(author_id)
+	db.session.delete(author)
+	db.session.commit()
+	flash("Your Author has been Deleted!",'success')
+	return redirect(url_for('admins.authors'))
