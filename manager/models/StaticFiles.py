@@ -78,11 +78,11 @@ class BookFile(db.Model, ResourceMixin):
     def scrape_cover_image(cls, path):
         doc = fitz.open(current_app.root_path + f'\\static\\books\\{path}')        
         mat = fitz.Matrix(0.51,0.58)
-        pix = doc[0].getPixmap(alpha=False, matrix = mat)         
+        pix = doc[0].get_pixmap(alpha=False, matrix = mat)         
         image_name = doc.name[len(doc.name[:-20]):]
         filename = image_name[:-4]
         img_path = current_app.root_path +'\\static\\book_covers\\' + filename + ".jpg"
-        pix.writeImage(img_path)        
+        pix.save(img_path)        
 
         return filename + ".jpg"
     

@@ -1,0 +1,41 @@
+{% extends "apps/admins/base.html" %}
+
+{% block content %}
+    <div class="m-3 border-bottom">
+        <h1 class="f-28 d-inline-block">Authors</h1>
+        <a href="{{ url_for('admins.author_create') }}" class="sw-btn f-12 float-right">+ New Author</a>
+    </div>
+    <div class="sw-table-area p-2">
+        <div class="sw-table-features">
+            <div class="sw-table-filter"></div>
+            <div class="sw-table-search"></div>
+            <div class="sw-table-dots"></div>
+        </div>
+        <table class="sw-table w-100 sw-table-rower sw-table-pager sw-table-infom">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Author</th>
+                    <th>Views</th>
+                    <th>sign_in_count</th>
+                    <th>books</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for author in authors.items %}
+                <tr>
+                    <td class="{% if author.active %}bg-info text-white{% endif %}">{{author.id}}</td>
+                    <td>{{author.name}}</td>
+                    <td class="sw-table-numeric">{{author.pg_views}}</td>
+                    <td class="sw-table-numeric">{{author.sign_in_count}}</td>
+                    <td class="sw-table-numeric">{{author.books.count()}}</td>
+                    <td class="text-right">
+                        <a class="b-4 text-info" href="{{url_for('admins.author_info', author_id=author.id) }}">View</a> | <a class="b-4 text-secondary" href="{{url_for('admins.author_edit', author_id=author.id) }}">Edit</a> | <a class="b-4 text-danger" href="{{url_for('admins.author_delete', author_id=author.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

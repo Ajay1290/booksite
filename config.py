@@ -3,8 +3,8 @@ import json
 
 class BaseConfig(object):
     DEBUG = False
-    TESTING = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///F:\\BookElf Versions\\Bookelf.in\\site.db'
+    TESTING = False    
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///D:\\Apps\\booksite\\site.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LOG_LEVEL = 'DEBUG'
     SERVER_NAME = 'localhost:5000'
@@ -14,7 +14,7 @@ class BaseConfig(object):
     REMEMBER_COOKIE_DURATION = timedelta(days=1)
 
     # Celery.
-    CELERY_BROKER_URL = 'redis://:devpassword@redis:6379/0'
+    CELERY_BROKER_URL = 'memory://'
     CELERY_RESULT_BACKEND = CELERY_BROKER_URL
     CELERY_ACCEPT_CONTENT = ['json']
     CELERY_TASK_SERIALIZER = 'json'
@@ -37,8 +37,9 @@ class BaseConfig(object):
     }
     BABEL_DEFAULT_LOCALE = 'en'
 
-    RATELIMIT_STORAGE_URL = CELERY_BROKER_URL
-    RATELIMIT_STRATEGY = 'fixed-window-elastic-expiry'
+
+    RATELIMIT_STORAGE_URL = "memory://"
+    RATELIMIT_STRATEGY = 'fixed-window'
     RATELIMIT_HEADERS_ENABLED = True
 
 class DevConfig(BaseConfig):

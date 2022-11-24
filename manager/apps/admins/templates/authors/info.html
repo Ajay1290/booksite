@@ -2,36 +2,36 @@
 
 {% block content %}
     <div class="m-3 border-bottom">
-        <h1 class="f-28 d-inline-block">Author Info</h1>
-        <a class="sw-btn f-12 px-3 float-right" href="{{url_for('admins.author_edit', author_id=author.id) }}">Edit</a>
+        <h1 class="f-28 d-inline-block">Users Info</h1>
+        <a class="sw-btn f-12 px-3 float-right" href="{{url_for('admins.users_edit', user_id=user.id) }}">Edit</a>
     </div>
     
     <div class="row m-0 sw-content-section m-3">
         <div class="col-5 mr-3">
             <div class="row my-3 border">
-                <div class="col-4 border-right">Author</div>
-                <div class="col-8">{{ author.name }}</div>
+                <div class="col-4 border-right">Username</div>
+                <div class="col-8">{{ user.username }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Email</div>
-                <div class="col-8">{{ author.email }}</div>
+                <div class="col-8">{{ user.email }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Phone</div>
-                <div class="col-8">{{ author.phone }}</div>
+                <div class="col-8">{{ user.phone }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Role</div>
-                <div class="col-8">{{ author.role }}</div>
+                <div class="col-8">{{ user.role }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Locale</div>
-                <div class="col-8">{{ author.locale }}</div>
+                <div class="col-8">{{ user.locale }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Books</div>
                 <div class="col-8">
-                    {% for book in author.books %}
+                    {% for book in user.books %}
                         {{ book.id }},
                     {% else %}
                         No Comments has been Posted!
@@ -42,28 +42,28 @@
         <div class="col-6">
             <div class="row my-3 border">
                 <div class="col-4 border-right">Views</div>
-                <div class="col-8">{{ author.pg_views }}</div>
+                <div class="col-8">{{ user.pg_views }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Sign in Count</div>
-                <div class="col-8">{{ author.sign_in_count }}</div>
+                <div class="col-8">{{ user.sign_in_count }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Current Sign in On</div>
-                <div class="col-8">{{ author.current_sign_in_on }}</div>
+                <div class="col-8">{{ user.current_sign_in_on }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Last Sign in On</div>
-                <div class="col-8">{{ author.last_sign_in_on }}</div>
+                <div class="col-8">{{ user.last_sign_in_on }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Last Sign in IP</div>
-                <div class="col-8">{{ author.last_sign_in_ip }}</div>
+                <div class="col-8">{{ user.last_sign_in_ip }}</div>
             </div>
             <div class="row my-3 border">
                 <div class="col-4 border-right">Comments</div>
                 <div class="col-8">
-                    {% for com in author.comments %}
+                    {% for com in user.comments %}
                         {{ com.id }}
                     {% else %}
                         No Comments has been Posted!
@@ -75,7 +75,7 @@
             <div class="row my-3 border">
                 <div class="col-4 border-right">Downloads</div>
                 <div class="col-8">
-                    {% for com in author.downloads %}
+                    {% for com in user.downloads %}
                         {{ com.id }}
                     {% else %}
                         No Downloads has been Done yet!
